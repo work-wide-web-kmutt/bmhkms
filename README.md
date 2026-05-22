@@ -77,6 +77,41 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 
 - Format and lint fix: `bun run check`
 
+## Commit Convention
+
+Commit messages must use this format:
+
+```text
+<type>: <subject>
+```
+
+Scopes are not allowed. Use one of these types:
+
+- `feat`
+- `fix`
+- `docs`
+- `style`
+- `refactor`
+- `perf`
+- `test`
+- `build`
+- `ci`
+- `chore`
+- `revert`
+
+Valid examples:
+
+- `feat: add user profile endpoint`
+- `fix: handle null session in auth guard`
+- `refactor: split auth setup into service module`
+- `chore: align lint scripts`
+
+Invalid examples:
+
+- `feat(auth): add login page` because scopes are not allowed
+- `add login page` because the type is missing
+- `feat add login page` because the `:` separator is missing
+
 ## Project Structure
 
 ```

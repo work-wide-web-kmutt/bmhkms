@@ -41,7 +41,9 @@
     "db:stop": "turbo -F @bmhkms/db db:stop",
     "db:down": "turbo -F @bmhkms/db db:down",
     "check": "ultracite check",
-    "fix": "ultracite fix"
+    "fix": "ultracite fix",
+    "commitlint": "commitlint",
+    "commit:check-last": "git log -1 --pretty=%B | bun commitlint"
   },
   "dependencies": {
     "@bmhkms/env": "workspace:*",
@@ -50,6 +52,8 @@
   },
   "devDependencies": {
     "@bmhkms/config": "workspace:*",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@types/bun": "catalog:",
     "lefthook": "latest",
     "oxfmt": "latest",
