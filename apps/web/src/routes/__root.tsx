@@ -13,8 +13,6 @@ import { evlogErrorHandler } from "evlog/nitro/v3";
 
 import type { orpc } from "@/utils/orpc";
 
-import Header from "../components/header";
-
 import appCss from "../index.css?url";
 export interface RouterAppContext {
   orpc: typeof orpc;
@@ -40,7 +38,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         name: "viewport",
       },
       {
-        title: "My App",
+        title: "BMHKMS",
       },
     ],
   }),
@@ -58,7 +56,6 @@ function RootDocument() {
       </head>
       <body>
         <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
           <Outlet />
         </div>
         <Toaster richColors />
