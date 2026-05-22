@@ -24,6 +24,9 @@
   },
   "type": "module",
   "scripts": {
+    "auth:generate": "bun run --cwd apps/server auth:generate",
+    "auth:info": "bun run --cwd apps/server auth:info",
+    "auth:secret": "bun run --cwd apps/server auth:secret",
     "dev": "turbo dev",
     "build": "turbo build",
     "check-types": "turbo check-types",

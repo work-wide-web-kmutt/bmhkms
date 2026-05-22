@@ -18,7 +18,6 @@ export function createAuth() {
     baseURL: env.BETTER_AUTH_URL,
     database: drizzleAdapter(db, {
       provider: "pg",
-
       schema,
     }),
     emailAndPassword: {

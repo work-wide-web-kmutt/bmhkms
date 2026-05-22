@@ -5,6 +5,7 @@ import react from "ultracite/oxlint/react";
 export default defineConfig({
   extends: [core, react],
   ignorePatterns: [
+    ".agents/**",
     "apps/fumadocs/src/routeTree.gen.ts",
     "apps/web/src/routeTree.gen.ts",
   ],
@@ -13,6 +14,7 @@ export default defineConfig({
       files: ["packages/db/src/schema/**/*.ts"],
       rules: {
         "no-inline-comments": "off",
+        "sort-keys": "off",
       },
     },
     {

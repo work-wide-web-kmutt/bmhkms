@@ -11,13 +11,13 @@
   },
   "scripts": {},
   "dependencies": {
-    "@bmhkms/auth": "workspace:*",
     "@bmhkms/db": "workspace:*",
     "@bmhkms/env": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
+    "better-auth": "catalog:",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },

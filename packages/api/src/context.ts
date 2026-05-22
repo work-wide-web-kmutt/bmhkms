@@ -1,18 +1,11 @@
-import { auth } from "@bmhkms/auth";
-import type { Context as ElysiaContext } from "elysia";
+import type { Session, User } from "better-auth";
 
-export interface CreateContextOptions {
-  context: ElysiaContext;
+export type AuthSession = {
+  session: Session;
+  user: User;
+} | null;
+
+export interface Context {
+  auth: null;
+  session: AuthSession;
 }
-
-export async function createContext({ context }: CreateContextOptions) {
-  const session = await auth.api.getSession({
-    headers: context.request.headers,
-  });
-  return {
-    auth: null,
-    session,
-  };
-}
-
-export type Context = Awaited<ReturnType<typeof createContext>>;

@@ -1,6 +1,4 @@
-import { createContext } from "@bmhkms/api/context";
 import { appRouter } from "@bmhkms/api/routers/index";
-import { auth } from "@bmhkms/auth";
 import { env } from "@bmhkms/env/server";
 import { cors } from "@elysiajs/cors";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
@@ -13,6 +11,9 @@ import { initLogger } from "evlog";
 import { createAuthMiddleware } from "evlog/better-auth";
 import type { BetterAuthInstance } from "evlog/better-auth";
 import { evlog } from "evlog/elysia";
+
+import { auth } from "./auth";
+import { createContext } from "./context";
 
 const rpcHandler = new RPCHandler(appRouter, {
   interceptors: [
