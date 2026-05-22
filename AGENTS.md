@@ -12,6 +12,34 @@ Oxlint + Oxfmt (the underlying engine) provides robust linting and formatting. M
 
 ---
 
+## Architecture
+
+Keep the backend split by responsibility:
+
+- `packages/api` is the shared oRPC contract layer. Put shared context types, procedure primitives, auth middleware, and feature routers here.
+- `apps/server` is the runtime layer. Keep Elysia bootstrap, Better Auth wiring, request context creation, and oRPC transport handlers here.
+- `packages/db` is the persistence layer. Keep Drizzle setup, schema, migrations, and generated auth schema here.
+
+### Future Services
+
+If the project grows integrations such as file storage, email, billing, queues, or third-party SDK clients:
+
+- Put them in `apps/server/src/services/<feature>/`
+- Keep service code out of `packages/api`
+- Let `packages/api` describe the contract and feature router shape
+- Let `apps/server` own runtime-only integrations and side effects
+
+Example direction:
+
+- `apps/server/src/services/file/`
+- `apps/server/src/services/email/`
+- `packages/api/src/modules/files/router.ts`
+- `packages/api/src/modules/users/router.ts`
+
+This keeps the web app depending on shared API types, while the server owns transport and infrastructure concerns.
+
+---
+
 ## Core Principles
 
 Write code that is **accessible, performant, type-safe, and maintainable**. Focus on clarity and explicit intent over brevity.

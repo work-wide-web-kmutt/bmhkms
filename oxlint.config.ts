@@ -18,7 +18,7 @@ export default defineConfig({
       },
     },
     {
-      files: ["apps/server/src/index.ts"],
+      files: ["apps/server/src/rpc/handlers.ts"],
       rules: {
         "promise/prefer-await-to-callbacks": "off",
       },

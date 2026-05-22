@@ -1,11 +1,5 @@
-import { appRouter } from "@bmhkms/api/routers/index";
 import { env } from "@bmhkms/env/server";
 import { cors } from "@elysiajs/cors";
-import { OpenAPIHandler } from "@orpc/openapi/fetch";
-import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
-import { onError } from "@orpc/server";
-import { RPCHandler } from "@orpc/server/fetch";
-import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { Elysia } from "elysia";
 import { initLogger } from "evlog";
 import { createAuthMiddleware } from "evlog/better-auth";
@@ -13,27 +7,8 @@ import type { BetterAuthInstance } from "evlog/better-auth";
 import { evlog } from "evlog/elysia";
 
 import { auth } from "./auth";
-import { createContext } from "./context";
-
-const rpcHandler = new RPCHandler(appRouter, {
-  interceptors: [
-    onError((error) => {
-      console.error(error);
-    }),
-  ],
-});
-const apiHandler = new OpenAPIHandler(appRouter, {
-  interceptors: [
-    onError((error) => {
-      console.error(error);
-    }),
-  ],
-  plugins: [
-    new OpenAPIReferencePlugin({
-      schemaConverters: [new ZodToJsonSchemaConverter()],
-    }),
-  ],
-});
+import { createContext } from "./rpc/context";
+import { apiHandler, rpcHandler } from "./rpc/handlers";
 
 initLogger({
   env: { service: "bmhkms-server" },
