@@ -21,18 +21,18 @@ export const queryClient = new QueryClient({
 });
 
 const link = new RPCLink({
-  url: `${env.VITE_SERVER_URL}/rpc`,
   fetch(url, options) {
     return fetch(url, {
       ...options,
       credentials: "include",
     });
   },
+  url: `${env.VITE_SERVER_URL}/rpc`,
 });
 
-const getORPCClient = () => {
+function getORPCClient() {
   return createORPCClient(link) as RouterClient<AppRouter>;
-};
+}
 
 export const client: RouterClient<AppRouter> = getORPCClient();
 

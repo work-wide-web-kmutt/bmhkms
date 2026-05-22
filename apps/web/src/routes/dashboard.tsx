@@ -5,12 +5,12 @@ import { getUser } from "@/functions/get-user";
 import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/dashboard")({
-  component: RouteComponent,
   beforeLoad: async () => {
     const session = await getUser();
     return { session };
   },
-  loader: async ({ context }) => {
+  component: RouteComponent,
+  loader: ({ context }) => {
     if (!context.session) {
       throw redirect({
         to: "/login",
