@@ -25,6 +25,9 @@
     "apps/fumadocs": {
       "name": "fumadocs",
       "dependencies": {
+        "@fontsource/ibm-plex-mono": "^5.2.7",
+        "@fontsource/ibm-plex-sans-thai": "^5.2.8",
+        "@fontsource/sarabun": "^5.2.8",
         "@tanstack/react-router": "1.170.4",
         "@tanstack/react-router-devtools": "1.167.0",
         "@tanstack/react-start": "1.168.6",
@@ -81,6 +84,9 @@
         "@bmhkms/api": "workspace:*",
         "@bmhkms/env": "workspace:*",
         "@bmhkms/ui": "workspace:*",
+        "@fontsource/ibm-plex-mono": "^5.2.7",
+        "@fontsource/ibm-plex-sans-thai": "^5.2.8",
+        "@fontsource/sarabun": "^5.2.8",
         "@orpc/client": "catalog:",
         "@orpc/server": "catalog:",
         "@orpc/tanstack-query": "^1.13.14",
@@ -484,6 +490,12 @@
     "@floating-ui/react-dom": ["@floating-ui/react-dom@2.1.8", "", { "dependencies": { "@floating-ui/dom": "^1.7.6" }, "peerDependencies": { "react": ">=16.8.0", "react-dom": ">=16.8.0" } }, "sha512-cC52bHwM/n/CxS87FH0yWdngEZrjdtLW/qVruo68qg+prK7ZQ4YGdut2GyDVpoGeAYe/h899rVeOVm6Oi40k2A=="],
 
     "@floating-ui/utils": ["@floating-ui/utils@0.2.11", "", {}, "sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg=="],
+
+    "@fontsource/ibm-plex-mono": ["@fontsource/ibm-plex-mono@5.2.7", "", {}, "sha512-MKAb8qV+CaiMQn2B0dIi1OV3565NYzp3WN5b4oT6LTkk+F0jR6j0ZN+5BKJiIhffDC3rtBULsYZE65+0018z9w=="],
+
+    "@fontsource/ibm-plex-sans-thai": ["@fontsource/ibm-plex-sans-thai@5.2.8", "", {}, "sha512-pddJU1HCjtqbXRcyCnbEJ8UV8pQQuUo23Hxjvdwr0DBibtUra66MVsFMDP/Et/Su5P2VeQAgalACZOCEkWaReA=="],
+
+    "@fontsource/sarabun": ["@fontsource/sarabun@5.2.8", "", {}, "sha512-EDf1jYaGmdeOOi3dKqy6Bjb+qPtsrJJyleoqAPq+VgStcJExwhqzYRT9HOeGE73RtfmvgJEdxk1W72EdxL6+ow=="],
 
     "@fumadocs/tailwind": ["@fumadocs/tailwind@0.0.5", "", { "peerDependencies": { "@tailwindcss/oxide": "^4.0.0", "tailwindcss": "^4.0.0" }, "optionalPeers": ["@tailwindcss/oxide", "tailwindcss"] }, "sha512-ENKPWUDRmriccsrUDE4bDBq3FNr/ms3BP2rWlsAEMV1yP23pcCaan+ceGfeBUsAQjw7sj9Q3R4Kl3g/TCStPzQ=="],
 
