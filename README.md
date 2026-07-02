@@ -91,6 +91,41 @@ Environment variables are read from each app's `.env` file (baked into web build
 - Docs: [Vite+ commit hooks](https://viteplus.dev/guide/commit-hooks)
 - Run checks: `bun run check`
 
+## Commit Convention
+
+This repository enforces a header-only Conventional Commits format:
+
+```text
+type: subject
+```
+
+Examples:
+
+```text
+feat: add booking calendar
+fix: handle empty patient queue
+docs: update setup steps
+```
+
+Rules:
+
+- Allowed types: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`
+- `scope` is not allowed
+- `body` is not allowed
+- `footer` is not allowed
+
+Set up Git hooks with:
+
+```bash
+bun run hooks:setup
+```
+
+Create commits with the interactive prompt:
+
+```bash
+bun run commit
+```
+
 ## Project Structure
 
 ```
@@ -117,6 +152,9 @@ bmhkms/
 - `bun run db:migrate`: Run database migrations
 - `bun run db:studio`: Open database studio UI
 - `bun run check`: Run Vite+ format/lint checks and workspace TypeScript checks
+- `bun run commit`: Open the interactive commit prompt
+- `bun run commitlint`: Lint the current commit message file
+- `bun run commitlint:check`: Lint commits in the latest range
 - `bun run lint`: Run Vite+ lint checks
 - `bun run format`: Run Vite+ formatting
 - `bun run staged`: Run Vite+ checks against staged files
