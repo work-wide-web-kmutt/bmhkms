@@ -14,6 +14,7 @@ export default defineConfig({
     "apps/server/dist/**",
     "packages/db/dist/**",
     "packages/db/src/schema/auth.ts",
+    "packages/db/src/migrations",
   ],
   options: {
     typeAware: false,
