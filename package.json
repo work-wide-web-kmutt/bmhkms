@@ -67,6 +67,7 @@
     "oxfmt": "latest",
     "oxlint": "latest",
     "rolldown": "1.1.0",
+    "skills": "^1.5.14",
     "typescript": "catalog:",
     "ultracite": "7.8.3",
     "vite-plus": "0.1.24"

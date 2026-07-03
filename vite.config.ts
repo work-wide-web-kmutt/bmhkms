@@ -2,7 +2,8 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   staged: {
-    "*.{js,ts,jsx,tsx,vue,svelte,css,md}": "ultracite fix",
-    "*.{json,jsonc}": "vp check --fix",
+    "!(*.gen).ts": "ultracite fix",
+    "*.{css,md,json,jsonc}": "vp check --fix",
+    "*.{js,jsx,tsx,vue,svelte}": "ultracite fix",
   },
 });
