@@ -1,4 +1,6 @@
-import { Button } from "@bmhkms/ui/components/button";
+import { Link, useNavigate } from "@tanstack/react-router";
+
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,10 +9,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@bmhkms/ui/components/dropdown-menu";
-import { Skeleton } from "@bmhkms/ui/components/skeleton";
-import { Link, useNavigate } from "@tanstack/react-router";
-
+} from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 
 export default function UserMenu() {

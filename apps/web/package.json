@@ -11,9 +11,9 @@
     "check-types": "vp build && tsc --noEmit"
   },
   "dependencies": {
+    "@base-ui/react": "^1.0.0",
     "@bmhkms/api": "workspace:*",
     "@bmhkms/env": "workspace:*",
-    "@bmhkms/ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@orpc/client": "catalog:",
     "@orpc/server": "catalog:",
@@ -23,12 +23,17 @@
     "@tanstack/react-query": "^5.90.12",
     "@tanstack/react-router": "^1.168.22",
     "better-auth": "catalog:",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dotenv": "catalog:",
     "lucide-react": "^1.8.0",
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "shadcn": "^3.6.2",
     "sonner": "^2.0.7",
+    "tailwind-merge": "^3.3.1",
+    "tw-animate-css": "^1.3.4",
     "zod": "catalog:"
   },
   "devDependencies": {
