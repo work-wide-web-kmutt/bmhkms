@@ -44,6 +44,7 @@ const identifyUser = createAuthMiddleware(auth as BetterAuthInstance, {
   exclude: ["/api/auth/**"],
   maskEmail: true,
 });
+const allowedOrigins = [env.WEB_URL, env.STAFF_URL];
 
 new Elysia()
   .use(evlog())
@@ -56,7 +57,7 @@ new Elysia()
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
       methods: ["GET", "POST", "OPTIONS"],
-      origin: env.CORS_ORIGIN,
+      origin: allowedOrigins,
     })
   )
   .all("/api/auth/*", (context) => {
