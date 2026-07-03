@@ -1,7 +1,6 @@
+import { orpc } from "@bmhkms/client/orpc";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-
-import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
@@ -20,12 +19,6 @@ function HomeComponent() {
   return (
     <div className="container mx-auto max-w-3xl px-4 py-2">
       <div className="grid gap-6">
-        <section className="rounded-lg border p-4">
-          <h1 className="mb-2 font-medium">Staff App</h1>
-          <p className="text-sm text-muted-foreground">
-            This is the staff-facing clone of the main web application.
-          </p>
-        </section>
         <section className="rounded-lg border p-4">
           <h2 className="mb-2 font-medium">API Status</h2>
           <div className="flex items-center gap-2">

@@ -56,17 +56,12 @@
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "^1.0.0",
-        "@bmhkms/api": "workspace:*",
-        "@bmhkms/env": "workspace:*",
+        "@bmhkms/client": "workspace:*",
         "@hookform/resolvers": "^5.2.2",
-        "@orpc/client": "catalog:",
-        "@orpc/server": "catalog:",
-        "@orpc/tanstack-query": "^1.13.14",
         "@tailwindcss/vite": "^4.2.2",
         "@tanstack/react-form": "^1.28.0",
         "@tanstack/react-query": "^5.90.12",
         "@tanstack/react-router": "^1.168.22",
-        "better-auth": "catalog:",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cnfast": "^0.0.8",
@@ -101,17 +96,12 @@
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "^1.0.0",
-        "@bmhkms/api": "workspace:*",
-        "@bmhkms/env": "workspace:*",
+        "@bmhkms/client": "workspace:*",
         "@hookform/resolvers": "^5.2.2",
-        "@orpc/client": "catalog:",
-        "@orpc/server": "catalog:",
-        "@orpc/tanstack-query": "^1.13.14",
         "@tailwindcss/vite": "^4.2.2",
         "@tanstack/react-form": "^1.28.0",
         "@tanstack/react-query": "^5.90.12",
         "@tanstack/react-router": "^1.168.22",
-        "better-auth": "catalog:",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cnfast": "^0.0.8",
@@ -168,6 +158,22 @@
         "better-auth": "catalog:",
         "dotenv": "catalog:",
         "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@bmhkms/config": "workspace:*",
+        "typescript": "catalog:",
+      },
+    },
+    "packages/client": {
+      "name": "@bmhkms/client",
+      "dependencies": {
+        "@bmhkms/api": "workspace:*",
+        "@bmhkms/env": "workspace:*",
+        "@orpc/client": "catalog:",
+        "@orpc/tanstack-query": "^1.13.14",
+        "@tanstack/react-query": "^5.90.12",
+        "better-auth": "catalog:",
+        "sonner": "^2.0.7",
       },
       "devDependencies": {
         "@bmhkms/config": "workspace:*",
@@ -316,6 +322,8 @@
     "@bmhkms/api": ["@bmhkms/api@workspace:packages/api"],
 
     "@bmhkms/auth": ["@bmhkms/auth@workspace:packages/auth"],
+
+    "@bmhkms/client": ["@bmhkms/client@workspace:packages/client"],
 
     "@bmhkms/config": ["@bmhkms/config@workspace:packages/config"],
 

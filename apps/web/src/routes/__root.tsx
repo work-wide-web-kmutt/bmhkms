@@ -1,3 +1,4 @@
+import type { orpc } from "@bmhkms/client/orpc";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -9,7 +10,6 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import type { orpc } from "@/utils/orpc";
 
 import "../index.css";
 
