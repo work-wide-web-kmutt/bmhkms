@@ -6,6 +6,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export function createAuth() {
   const db = createDb();
+  const trustedOrigins = [env.WEB_URL, env.STAFF_URL];
 
   return betterAuth({
     advanced: {
@@ -26,7 +27,7 @@ export function createAuth() {
     },
     plugins: [],
     secret: env.BETTER_AUTH_SECRET,
-    trustedOrigins: [env.CORS_ORIGIN],
+    trustedOrigins,
   });
 }
 
