@@ -1,4 +1,11 @@
 {
-  "recommendations": ["bradlc.vscode-tailwindcss", "oven.bun-vscode", "oxc.oxc-vscode"],
-  "unwantedRecommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "oven.bun-vscode",
+    "oxc.oxc-vscode"
+  ],
+  "unwantedRecommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ]
 }
