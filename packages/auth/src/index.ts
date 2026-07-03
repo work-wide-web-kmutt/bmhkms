@@ -4,8 +4,8 @@ import { env } from "@bmhkms/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError } from "better-auth/api";
-
 const ALLOWED_EMAIL_DOMAIN = "@kmutt.ac.th";
+import { username } from "better-auth/plugins";
 
 export function createAuth() {
   const db = createDb();
@@ -42,7 +42,7 @@ export function createAuth() {
     emailAndPassword: {
       enabled: false,
     },
-    plugins: [],
+    plugins: [username()],
     secret: env.BETTER_AUTH_SECRET,
     socialProviders: {
       microsoft: {
