@@ -3,6 +3,9 @@ import * as schema from "@bmhkms/db/schema/auth";
 import { env } from "@bmhkms/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { APIError } from "better-auth/api";
+
+const ALLOWED_EMAIL_DOMAIN = "@kmutt.ac.th";
 
 export function createAuth() {
   const db = createDb();
@@ -22,11 +25,33 @@ export function createAuth() {
 
       schema,
     }),
+    databaseHooks: {
+      user: {
+        create: {
+          before: (user) => {
+            if (!user.email?.toLowerCase().endsWith(ALLOWED_EMAIL_DOMAIN)) {
+              throw new APIError("FORBIDDEN", {
+                message: `Only ${ALLOWED_EMAIL_DOMAIN} accounts are allowed`,
+              });
+            }
+            return Promise.resolve({ data: user });
+          },
+        },
+      },
+    },
     emailAndPassword: {
-      enabled: true,
+      enabled: false,
     },
     plugins: [],
     secret: env.BETTER_AUTH_SECRET,
+    socialProviders: {
+      microsoft: {
+        clientId: env.MICROSOFT_CLIENT_ID,
+        clientSecret: env.MICROSOFT_CLIENT_SECRET,
+        prompt: "select_account",
+        tenantId: env.MICROSOFT_TENANT_ID,
+      },
+    },
     trustedOrigins,
   });
 }
