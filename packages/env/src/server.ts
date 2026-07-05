@@ -11,7 +11,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().min(1),
     MICROSOFT_CLIENT_ID: z.string().min(1),
     MICROSOFT_CLIENT_SECRET: z.string().min(1),
-    MICROSOFT_TENANT_ID: z.string().min(1).default("common"),
+    MICROSOFT_TENANT_ID: z.string().min(1),
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),

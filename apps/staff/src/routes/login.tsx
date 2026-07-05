@@ -24,11 +24,18 @@ function RouteComponent() {
 
   async function signIn() {
     setIsSigningIn(true);
-    await authClient.signIn.social({
-      callbackURL: window.location.origin,
-      errorCallbackURL: `${window.location.origin}/login`,
-      provider: "microsoft",
-    });
+    try {
+      const { error: signInError } = await authClient.signIn.social({
+        callbackURL: window.location.origin,
+        errorCallbackURL: `${window.location.origin}/login`,
+        provider: "microsoft",
+      });
+      if (signInError) {
+        setIsSigningIn(false);
+      }
+    } catch {
+      setIsSigningIn(false);
+    }
   }
 
   return (
