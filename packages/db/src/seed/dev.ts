@@ -3,16 +3,8 @@ import { reconcileSeedUser } from "./shared";
 
 const devUsers: SeedUser[] = [
   {
-    displayUsername: "dev-root",
-    email: "dev-root@local.test",
-    name: "Dev Root",
-    password: "dev-root",
-    role: "root",
-    username: "dev-root",
-  },
-  {
     displayUsername: "dev-admin",
-    email: "dev-admin@local.test",
+    email: "dev-admin+bmhk-local-dev@kmutt.ac.th",
     name: "Dev Admin",
     password: "dev-admin",
     role: "admin",
@@ -20,7 +12,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "dev-records-staff",
-    email: "dev-records-staff@local.test",
+    email: "dev-records-staff+bmhk-local-dev@kmutt.ac.th",
     name: "Dev Records Staff",
     password: "dev-records-staff",
     role: "records_staff",
@@ -28,7 +20,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "dev-staff",
-    email: "dev-staff@local.test",
+    email: "dev-staff+bmhk-local-dev@kmutt.ac.th",
     name: "Dev Staff",
     password: "dev-staff",
     role: "staff",
@@ -36,7 +28,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "dev-observer",
-    email: "dev-observer@local.test",
+    email: "dev-observer+bmhk-local-dev@kmutt.ac.th",
     name: "Dev Observer",
     password: "dev-observer",
     role: "observer",
@@ -44,7 +36,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "student-1",
-    email: "student-1@local.test",
+    email: "student-1+bmhk-local-dev@kmutt.ac.th",
     name: "Student 1",
     password: "student-1",
     role: "contestant",
@@ -52,7 +44,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "student-2",
-    email: "student-2@local.test",
+    email: "student-2+bmhk-local-dev@kmutt.ac.th",
     name: "Student 2",
     password: "student-2",
     role: "contestant",
@@ -60,7 +52,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "student-3",
-    email: "student-3@local.test",
+    email: "student-3+bmhk-local-dev@kmutt.ac.th",
     name: "Student 3",
     password: "student-3",
     role: "contestant",

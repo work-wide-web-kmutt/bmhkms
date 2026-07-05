@@ -19,7 +19,7 @@
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
     "seed:root": "DOTENV_CONFIG_PATH=../../apps/server/.env bun run ./src/seed/root-admin.ts",
-    "seed:dev": "DOTENV_CONFIG_PATH=../../apps/server/.env bun run ./src/seed/test.ts"
+    "seed:dev": "DOTENV_CONFIG_PATH=../../apps/server/.env bun run ./src/seed/dev.ts"
   },
   "dependencies": {
     "@bmhkms/env": "workspace:*",

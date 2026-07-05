@@ -3,7 +3,7 @@ import { reconcileSeedUser } from "./shared";
 
 const rootAdminUser: SeedUser = {
   displayUsername: "root-admin",
-  email: "root-admin@local.test",
+  email: "root-admin+bmhk@kmutt.ac.th",
   name: "Root Admin",
   password: "root-admin",
   role: "root",
