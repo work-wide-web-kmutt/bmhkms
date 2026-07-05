@@ -1,16 +1,8 @@
-import { authClient } from "@bmhkms/client/auth-client";
 import { orpc } from "@bmhkms/client/orpc";
 import { useQuery } from "@tanstack/react-query";
 import * as reactRouter from "@tanstack/react-router";
 
 export const Route = reactRouter.createFileRoute("/")({
-  beforeLoad: async () => {
-    const { data: session } = await authClient.getSession();
-    if (!session) {
-      throw reactRouter.redirect({ to: "/login" });
-    }
-    return { session };
-  },
   component: HomeComponent,
 });
 
