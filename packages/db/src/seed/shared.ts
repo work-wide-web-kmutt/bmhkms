@@ -1,10 +1,6 @@
-export type SeedRole =
-  | "admin"
-  | "contestant"
-  | "observer"
-  | "records_staff"
-  | "root"
-  | "staff";
+import type { RoleName } from "../../../auth/src/roles";
+
+export type SeedRole = RoleName;
 
 export interface SeedUser {
   displayUsername: string;

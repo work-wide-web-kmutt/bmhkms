@@ -16,6 +16,9 @@ import {
   staff,
 } from "./permission";
 
+export { permissionStatements, roleDefinitions, roleNames } from "./roles";
+export type { RoleName } from "./roles";
+
 const ALLOWED_EMAIL_DOMAIN = "@kmutt.ac.th";
 
 export function createAuth() {
