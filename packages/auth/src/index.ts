@@ -4,8 +4,19 @@ import { env } from "@bmhkms/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError } from "better-auth/api";
+import { username, admin as adminPlugin } from "better-auth/plugins";
+
+import {
+  admin,
+  ac,
+  contestant,
+  observer,
+  records_staff,
+  root,
+  staff,
+} from "./permission";
+
 const ALLOWED_EMAIL_DOMAIN = "@kmutt.ac.th";
-import { username } from "better-auth/plugins";
 
 export function createAuth() {
   const db = createDb();
@@ -42,7 +53,18 @@ export function createAuth() {
     emailAndPassword: {
       enabled: false,
     },
-    plugins: [username()],
+    plugins: [
+      username(),
+      adminPlugin({
+        ac,
+        admin,
+        contestant,
+        observer,
+        records_staff,
+        root,
+        staff,
+      }),
+    ],
     secret: env.BETTER_AUTH_SECRET,
     socialProviders: {
       microsoft: {
