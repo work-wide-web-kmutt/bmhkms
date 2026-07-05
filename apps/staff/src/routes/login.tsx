@@ -3,7 +3,13 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
@@ -43,18 +49,18 @@ function RouteComponent() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Staff Sign in</CardTitle>
-          <CardDescription>Use your KMUTT account (@kmutt.ac.th)</CardDescription>
+          <CardDescription>Sign in with your Microsoft account</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           {error && (
             <p className="text-sm text-destructive">
               {error === "signup_disabled" || error === "access_denied"
-                ? "Sign in failed. Only @kmutt.ac.th accounts are allowed."
+                ? "Sign in failed."
                 : `Sign in failed: ${error}`}
             </p>
           )}
           <Button className="w-full" disabled={isSigningIn} onClick={signIn}>
-            {isSigningIn ? "Redirecting..." : "Sign in with KMUTT account"}
+            {isSigningIn ? "Redirecting..." : "Sign in with Microsoft"}
           </Button>
         </CardContent>
       </Card>

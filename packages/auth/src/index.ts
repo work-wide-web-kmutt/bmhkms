@@ -3,7 +3,6 @@ import * as schema from "@bmhkms/db/schema/auth";
 import { env } from "@bmhkms/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { APIError } from "better-auth/api";
 import { username, admin as adminPlugin } from "better-auth/plugins";
 
 import {
@@ -18,8 +17,6 @@ import {
 
 export { permissionStatements, roleDefinitions, roleNames } from "./roles";
 export type { RoleName } from "./roles";
-
-const ALLOWED_EMAIL_DOMAIN = "@kmutt.ac.th";
 
 export function createAuth() {
   const db = createDb();
@@ -39,20 +36,6 @@ export function createAuth() {
 
       schema,
     }),
-    databaseHooks: {
-      user: {
-        create: {
-          before: (user) => {
-            if (!user.email?.toLowerCase().endsWith(ALLOWED_EMAIL_DOMAIN)) {
-              throw new APIError("FORBIDDEN", {
-                message: `Only ${ALLOWED_EMAIL_DOMAIN} accounts are allowed`,
-              });
-            }
-            return Promise.resolve({ data: user });
-          },
-        },
-      },
-    },
     emailAndPassword: {
       enabled: false,
     },
