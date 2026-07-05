@@ -1,1 +1,1 @@
-- Do not edit change or do anything in packages/db/src/schema/auth.ts please generate using script in packages/auth/package.json `auth:generate`
+- Do not edit packages/db/src/schema/auth.ts directly. Generate it using the packages/auth/package.json script: `auth:generate`.
