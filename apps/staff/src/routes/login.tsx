@@ -1,11 +1,11 @@
 import { authClient } from "@bmhkms/client/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
-import { AlertCircleIcon, LockIcon, MailIcon } from "lucide-react";
-import { useState } from "react";
+import { LockIcon, MailIcon } from "lucide-react";
+import react from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -45,10 +45,8 @@ export const Route = createFileRoute("/login")({
 
 function RouteComponent() {
   const router = useRouter();
-  const { error } = Route.useSearch();
-  const [authError, setAuthError] = useState<string | null>(null);
   const [isSigningInWithMicrosoft, setIsSigningInWithMicrosoft] =
-    useState(false);
+    react.useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -56,8 +54,6 @@ function RouteComponent() {
       password: "",
     },
     onSubmit: async ({ value }) => {
-      setAuthError(null);
-
       const { error: signInError } = await authClient.signIn.email(
         {
           email: value.email,
@@ -75,30 +71,15 @@ function RouteComponent() {
       }
 
       if (signInError.code === "INVALID_USERNAME_OR_PASSWORD") {
-        setAuthError("Invalid username or password.");
+        toast.error("Invalid username or password.");
         return;
       }
 
-      if (signInError.code === "EMAIL_NOT_VERIFIED") {
-        setAuthError("This account cannot sign in yet.");
-        return;
-      }
-
-      setAuthError("Sign in failed. Please try again.");
+      toast.error("Sign in failed. Please try again.");
     },
   });
 
-  let routeError: string | null = null;
-
-  if (error === "signup_disabled" || error === "access_denied") {
-    routeError = "Microsoft sign-in failed.";
-  } else if (error) {
-    routeError = "Sign in failed.";
-  }
-  const activeError = authError ?? routeError;
-
   async function signIn() {
-    setAuthError(null);
     setIsSigningInWithMicrosoft(true);
 
     try {
@@ -109,11 +90,11 @@ function RouteComponent() {
       });
 
       if (signInError) {
-        setAuthError("Microsoft sign-in failed.");
+        toast.error("Microsoft sign-in failed.");
         setIsSigningInWithMicrosoft(false);
       }
     } catch {
-      setAuthError("Microsoft sign-in failed.");
+      toast.error("Microsoft sign-in failed.");
       setIsSigningInWithMicrosoft(false);
     }
   }
@@ -128,13 +109,6 @@ function RouteComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {activeError ? (
-            <Alert variant="destructive">
-              <AlertCircleIcon />
-              <AlertTitle>Unable to sign in</AlertTitle>
-              <AlertDescription>{activeError}</AlertDescription>
-            </Alert>
-          ) : null}
           <Button
             className="w-full"
             disabled={isSigningInWithMicrosoft || form.state.isSubmitting}
@@ -198,10 +172,9 @@ function RouteComponent() {
                           name={field.name}
                           onBlur={field.handleBlur}
                           onChange={(event) => {
-                            setAuthError(null);
                             field.handleChange(event.target.value);
                           }}
-                          placeholder="dev-admin+bmhk-local-dev@kmutt.ac.th"
+                          placeholder="Enter your email"
                           type="email"
                           value={field.state.value}
                         />
@@ -246,7 +219,6 @@ function RouteComponent() {
                           name={field.name}
                           onBlur={field.handleBlur}
                           onChange={(event) => {
-                            setAuthError(null);
                             field.handleChange(event.target.value);
                           }}
                           placeholder="Enter your password"
