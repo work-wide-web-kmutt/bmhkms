@@ -28,7 +28,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "dev-observer",
-    email: "dev-observer+bmhk-local-dev@kmutt.ac.th",
+    email: "dev-observer+bmhk-local-dev@gmail.com",
     name: "Dev Observer",
     password: "dev-observer",
     role: "observer",
@@ -36,7 +36,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "student-1",
-    email: "student-1+bmhk-local-dev@kmutt.ac.th",
+    email: "student-1+bmhk-local-dev@gmail.com",
     name: "Student 1",
     password: "student-1",
     role: "contestant",
@@ -44,7 +44,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "student-2",
-    email: "student-2+bmhk-local-dev@kmutt.ac.th",
+    email: "student-2+bmhk-local-dev@gmail.com",
     name: "Student 2",
     password: "student-2",
     role: "contestant",
@@ -52,7 +52,7 @@ const devUsers: SeedUser[] = [
   },
   {
     displayUsername: "student-3",
-    email: "student-3+bmhk-local-dev@kmutt.ac.th",
+    email: "student-3+bmhk-local-dev@gmail.com",
     name: "Student 3",
     password: "student-3",
     role: "contestant",
