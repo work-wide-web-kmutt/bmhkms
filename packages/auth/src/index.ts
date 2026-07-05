@@ -37,7 +37,8 @@ export function createAuth() {
       schema,
     }),
     emailAndPassword: {
-      enabled: false,
+      disableSignUp: true,
+      enabled: true,
     },
     plugins: [
       username(),
