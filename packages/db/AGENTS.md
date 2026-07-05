@@ -1,0 +1,1 @@
+- Do not edit change or do anything in packages/db/src/schema/auth.ts please generate using script in packages/auth/package.json `auth:generate`
