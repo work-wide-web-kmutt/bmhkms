@@ -61,9 +61,8 @@ function RouteComponent() {
         },
         {
           onSuccess: () => {
-            void router.navigate({ to: "/" });
+            void router.navigate({ to: "/dashboard" });
           },
-        }
       );
 
       if (!signInError) {
