@@ -44,5 +44,5 @@ function UserAvatar({ className, image, name }: UserAvatarProps) {
   );
 }
 
-export { UserAvatar };
+export default UserAvatar;
 export type { UserAvatarProps };

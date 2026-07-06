@@ -1,7 +1,7 @@
 import { orpc } from "@bmhkms/client/orpc";
 import { useQuery } from "@tanstack/react-query";
 
-function HealthStatus() {
+function StatusHealth() {
   const healthCheck = useQuery(orpc.healthCheck.queryOptions());
 
   function getStatusText() {
@@ -21,4 +21,4 @@ function HealthStatus() {
   );
 }
 
-export { HealthStatus };
+export default StatusHealth;

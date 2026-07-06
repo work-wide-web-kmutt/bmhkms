@@ -19,8 +19,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HealthStatus } from "@/features/status/health";
-import { UserAvatar } from "@/features/user/avatar";
+import StatusHealth from "@/features/status/health";
+import UserAvatar from "@/features/user/avatar";
 
 const AVATAR_FALLBACK_SIZE = "size-10";
 const protectedRouteApi = getRouteApi("/_protected");
@@ -102,7 +102,7 @@ function UserDropdown() {
             <ActivityIcon />
             <span>Health</span>
             <DropdownMenuShortcut>
-              <HealthStatus />
+              <StatusHealth />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -116,4 +116,4 @@ function UserDropdown() {
   );
 }
 
-export { UserDropdown };
+export default UserDropdown;

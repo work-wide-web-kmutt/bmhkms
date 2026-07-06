@@ -5,8 +5,7 @@ import {
   SidebarGroupContent,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-
-import { UserDropdown } from "./user-dropdown";
+import UserDropdown from "@/features/user/dropdown";
 
 function StaffSidebar() {
   return (
