@@ -35,7 +35,7 @@ function AuthLayout() {
     <SidebarProvider defaultOpen>
       <StaffSidebar />
       <SidebarInset>
-        <div className="flex min-h-svh flex-col">
+        <div>
           <header className="flex h-14 items-center border-b px-4">
             <SidebarTrigger />
           </header>
