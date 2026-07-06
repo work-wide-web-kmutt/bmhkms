@@ -6,10 +6,14 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 
-export function StaffSidebar() {
+import { UserDropdown } from "./user-dropdown";
+
+function StaffSidebar() {
   return (
     <Sidebar collapsible="offcanvas" variant="inset">
-      <SidebarHeader>Bangmod Hackathon Management System</SidebarHeader>
+      <SidebarHeader>
+        <UserDropdown />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent />
@@ -18,3 +22,5 @@ export function StaffSidebar() {
     </Sidebar>
   );
 }
+
+export { StaffSidebar };

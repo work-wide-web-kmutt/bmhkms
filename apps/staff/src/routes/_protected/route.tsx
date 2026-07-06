@@ -1,12 +1,12 @@
 import { authClient } from "@bmhkms/client/auth-client";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
-import { StaffSidebar } from "@/components/staff-sidebar";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { StaffSidebar } from "@/features/staff-sidebar";
 
 const KMUTT_EMAIL_DOMAIN = "@kmutt.ac.th";
 
