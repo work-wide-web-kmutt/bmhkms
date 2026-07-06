@@ -69,8 +69,11 @@ function RouteComponent() {
         return;
       }
 
-      if (signInError.code === "INVALID_USERNAME_OR_PASSWORD") {
-        toast.error("Invalid username or password.");
+      if (
+        signInError.code === "INVALID_EMAIL_OR_PASSWORD" ||
+        signInError.code === "INVALID_USERNAME_OR_PASSWORD"
+      ) {
+        toast.error("Invalid email or password.");
         return;
       }
 
