@@ -63,6 +63,7 @@ function RouteComponent() {
           onSuccess: () => {
             void router.navigate({ to: "/dashboard" });
           },
+        }
       );
 
       if (!signInError) {
@@ -86,7 +87,7 @@ function RouteComponent() {
 
     try {
       const { error: signInError } = await authClient.signIn.social({
-        callbackURL: "/",
+        callbackURL: "/dashboard",
         errorCallbackURL: "/login",
         provider: "microsoft",
       });
