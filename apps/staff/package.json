@@ -23,6 +23,7 @@
     "cnfast": "^0.0.8",
     "dotenv": "catalog:",
     "lucide-react": "^1.8.0",
+    "motion": "^12.42.2",
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
