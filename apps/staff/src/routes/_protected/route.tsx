@@ -14,9 +14,8 @@ export const Route = createFileRoute("/_protected")({
 
     const userEmail = session.data.user.email.toLowerCase();
     if (!userEmail.endsWith(KMUTT_EMAIL_DOMAIN)) {
-      throw redirect({
-        to: "/",
-      });
+      await authClient.signOut();
+      throw redirect({ to: "/login", search: { error: "access_denied" } });
     }
 
     return { session };
