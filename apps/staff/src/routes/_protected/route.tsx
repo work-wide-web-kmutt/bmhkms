@@ -1,6 +1,13 @@
 import { authClient } from "@bmhkms/client/auth-client";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
+import { StaffSidebar } from "@/components/staff-sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+
 const KMUTT_EMAIL_DOMAIN = "@kmutt.ac.th";
 
 export const Route = createFileRoute("/_protected")({
@@ -24,5 +31,19 @@ export const Route = createFileRoute("/_protected")({
 });
 
 function AuthLayout() {
-  return <Outlet />;
+  return (
+    <SidebarProvider defaultOpen>
+      <StaffSidebar />
+      <SidebarInset>
+        <div className="flex min-h-svh flex-col">
+          <header className="flex h-14 items-center border-b px-4">
+            <SidebarTrigger />
+          </header>
+          <div className="flex flex-1 flex-col">
+            <Outlet />
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
 }
