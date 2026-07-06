@@ -6,6 +6,8 @@ export default defineConfig({
   ignorePatterns: [
     "node_modules/**",
     "**/node_modules/**",
+    "apps/staff/.tanstack/**",
+    "apps/staff/src/routeTree.gen.ts",
     "apps/web/dist/**",
     "apps/web/.tanstack/**",
     "apps/web/src/routeTree.gen.ts",

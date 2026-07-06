@@ -12,6 +12,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 import "../index.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export interface RouterAppContext {
   orpc: typeof orpc;
@@ -51,10 +52,12 @@ function RootComponent() {
         disableTransitionOnChange
         storageKey="vite-ui-theme"
       >
-        <div className="grid grid-rows-[auto_1fr] h-svh">
-          <Outlet />
-        </div>
-        <Toaster richColors />
+        <TooltipProvider>
+          <div className="grid grid-rows-[auto_1fr] h-svh">
+            <Outlet />
+          </div>
+          <Toaster richColors />
+        </TooltipProvider>
       </ThemeProvider>
       <TanStackRouterDevtools position="bottom-left" />
       <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
