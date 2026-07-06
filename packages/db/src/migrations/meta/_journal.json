@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1783071512432,
+      "tag": "0000_small_ma_gnuci",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1783081115827,
+      "tag": "0001_outstanding_mindworm",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1783238414961,
+      "tag": "0002_early_ben_parker",
+      "breakpoints": true
+    }
+  ]
+}

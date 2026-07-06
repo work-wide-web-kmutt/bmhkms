@@ -11,5 +11,6 @@ export default defineConfig({
     "apps/web/src/routeTree.gen.ts",
     "apps/server/dist/**",
     "packages/db/dist/**",
+    "packages/db/src/migrations",
   ],
 });

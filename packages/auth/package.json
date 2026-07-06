@@ -9,7 +9,11 @@
       "default": "./src/*.ts"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "auth:generate": "DOTENV_CONFIG_PATH=../../apps/server/.env better-auth generate --config ./src/index.ts --output ../db/src/schema/auth.ts --yes",
+    "auth:info": "DOTENV_CONFIG_PATH=../../apps/server/.env better-auth info --config ./src/index.ts",
+    "auth:secret": "DOTENV_CONFIG_PATH=../../apps/server/.env better-auth secret"
+  },
   "dependencies": {
     "@bmhkms/db": "workspace:*",
     "@bmhkms/env": "workspace:*",
@@ -19,6 +23,7 @@
   },
   "devDependencies": {
     "@bmhkms/config": "workspace:*",
+    "auth": "catalog:",
     "typescript": "catalog:"
   }
 }
