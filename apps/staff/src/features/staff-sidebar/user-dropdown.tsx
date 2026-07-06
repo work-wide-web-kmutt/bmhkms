@@ -1,16 +1,25 @@
 import { authClient } from "@bmhkms/client/auth-client";
 import { getRouteApi, useRouter } from "@tanstack/react-router";
-import { ChevronDownIcon, LogOutIcon, PaletteIcon } from "lucide-react";
+import {
+  ActivityIcon,
+  ChevronDownIcon,
+  LogOutIcon,
+  PaletteIcon,
+} from "lucide-react";
 
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { HealthStatus } from "@/features/status/health";
 import { UserAvatar } from "@/features/user/avatar";
 
 const AVATAR_FALLBACK_SIZE = "size-10";
@@ -74,16 +83,29 @@ function UserDropdown() {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="flex justify-between focus:bg-transparent focus:text-inherit"
-          closeOnClick={false}
-        >
-          <div className="gap-2 flex">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Settings</DropdownMenuLabel>
+          <DropdownMenuItem
+            className="focus:bg-transparent focus:text-inherit"
+            closeOnClick={false}
+          >
             <PaletteIcon />
             <span>Theme</span>
-          </div>
-          <ThemeSwitcher />
-        </DropdownMenuItem>
+            <DropdownMenuShortcut>
+              <ThemeSwitcher />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="focus:bg-transparent focus:text-inherit"
+            closeOnClick={false}
+          >
+            <ActivityIcon />
+            <span>Health</span>
+            <DropdownMenuShortcut>
+              <HealthStatus />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOutIcon />
