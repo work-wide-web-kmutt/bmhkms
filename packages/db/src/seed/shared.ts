@@ -78,6 +78,12 @@ interface ReconcileResult {
   status: "created" | "updated";
 }
 
+interface RootBootstrapResult {
+  email: string;
+  role: SeedRole;
+  status: "created";
+}
+
 const AUTH_MODULE_PATH = "../../../auth/src/index";
 const CREDENTIAL_PROVIDER_ID = "credential";
 
@@ -89,9 +95,16 @@ async function reconcileExistingUser(
   seedUser: SeedUser,
   userId: string
 ): Promise<void> {
+  await updateSeedUserProfile(userId, seedUser);
+  await ensureCredentialAccount(userId, seedUser.password);
+}
+
+async function updateSeedUserProfile(
+  userId: string,
+  seedUser: SeedUser
+): Promise<void> {
   const { auth } = await getAuthModule();
   const context = await auth.$context;
-  const hashedPassword = await context.password.hash(seedUser.password);
 
   await context.internalAdapter.updateUser(userId, {
     banExpires: null,
@@ -103,7 +116,24 @@ async function reconcileExistingUser(
     role: seedUser.role,
     username: seedUser.username,
   });
+}
 
+export async function findUserByEmail(
+  email: string
+): Promise<AuthUserLookup | null> {
+  const { auth } = await getAuthModule();
+  const context = await auth.$context;
+
+  return context.internalAdapter.findUserByEmail(email.toLowerCase());
+}
+
+export async function ensureCredentialAccount(
+  userId: string,
+  password: string
+): Promise<void> {
+  const { auth } = await getAuthModule();
+  const context = await auth.$context;
+  const hashedPassword = await context.password.hash(password);
   const accounts = await context.internalAdapter.findAccounts(userId);
   const credentialAccount = accounts.find(
     (account) => account.providerId === CREDENTIAL_PROVIDER_ID
@@ -122,36 +152,42 @@ async function reconcileExistingUser(
   });
 }
 
+async function createSeedUser(seedUser: SeedUser): Promise<string> {
+  const { auth } = await getAuthModule();
+  const email = seedUser.email.toLowerCase();
+
+  await auth.api.createUser({
+    body: {
+      data: {
+        displayUsername: seedUser.displayUsername,
+        emailVerified: true,
+        username: seedUser.username,
+      },
+      email,
+      name: seedUser.name,
+      password: seedUser.password,
+      role: seedUser.role,
+    },
+  });
+
+  const createdUser = await findUserByEmail(email);
+
+  if (!createdUser?.user) {
+    throw new Error(`Failed to create seeded user: ${email}`);
+  }
+
+  return createdUser.user.id;
+}
+
 export async function reconcileSeedUser(
   seedUser: SeedUser
 ): Promise<ReconcileResult> {
-  const { auth } = await getAuthModule();
-  const context = await auth.$context;
   const email = seedUser.email.toLowerCase();
-  const existingUser = await context.internalAdapter.findUserByEmail(email);
+  const existingUser = await findUserByEmail(email);
 
   if (!existingUser?.user) {
-    await auth.api.createUser({
-      body: {
-        data: {
-          displayUsername: seedUser.displayUsername,
-          emailVerified: true,
-          username: seedUser.username,
-        },
-        email,
-        name: seedUser.name,
-        password: seedUser.password,
-        role: seedUser.role,
-      },
-    });
-
-    const createdUser = await context.internalAdapter.findUserByEmail(email);
-
-    if (!createdUser?.user) {
-      throw new Error(`Failed to create seeded user: ${email}`);
-    }
-
-    await reconcileExistingUser(seedUser, createdUser.user.id);
+    const userId = await createSeedUser(seedUser);
+    await reconcileExistingUser(seedUser, userId);
 
     return {
       email,
@@ -166,5 +202,25 @@ export async function reconcileSeedUser(
     email,
     role: seedUser.role,
     status: "updated",
+  };
+}
+
+export async function createRootBootstrapUser(
+  seedUser: SeedUser
+): Promise<RootBootstrapResult> {
+  const email = seedUser.email.toLowerCase();
+  const existingUser = await findUserByEmail(email);
+
+  if (existingUser?.user) {
+    throw new Error(`Root admin already exists for email: ${email}`);
+  }
+
+  const userId = await createSeedUser(seedUser);
+  await ensureCredentialAccount(userId, seedUser.password);
+
+  return {
+    email,
+    role: seedUser.role,
+    status: "created",
   };
 }
