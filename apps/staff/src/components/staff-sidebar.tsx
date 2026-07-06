@@ -7,7 +7,7 @@ import {
 
 export function StaffSidebar() {
   return (
-    <Sidebar collapsible="offcanvas">
+    <Sidebar collapsible="offcanvas" variant="inset">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent />
