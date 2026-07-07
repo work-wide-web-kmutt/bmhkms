@@ -10,11 +10,8 @@ interface StaffDirectorySeedUser {
 
 interface StaffDirectoryRow extends StaffDirectorySeedUser {
   availability: StaffAvailability;
-  balance: number;
   company: string;
-  flag: string;
   joined: string;
-  location: string;
   role: string;
   status: StaffStatus;
 }
@@ -96,7 +93,6 @@ const staffDirectoryMockData: StaffDirectoryRow[] = staffDirectorySeedUsers.map(
   (user, index) => ({
     ...user,
     availability: (["online", "away", "busy", "offline"] as const)[index % 4],
-    balance: 5143.03 + index * 100,
     company: (
       [
         "Apple",
@@ -111,24 +107,7 @@ const staffDirectoryMockData: StaffDirectoryRow[] = staffDirectorySeedUsers.map(
         "ENI",
       ] as const
     )[index % 10],
-    flag: (
-      ["us", "gb", "ca", "au", "de", "my", "es", "jp", "fr", "it"] as const
-    )[index % 10],
     joined: "Jan, 2024",
-    location: (
-      [
-        "United States",
-        "United Kingdom",
-        "Canada",
-        "Australia",
-        "Germany",
-        "Malaysia",
-        "Spain",
-        "Japan",
-        "France",
-        "Italy",
-      ] as const
-    )[index % 10],
     role: (
       [
         "CEO",
