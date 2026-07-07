@@ -5,6 +5,9 @@
     "./auth-client": {
       "default": "./src/auth-client.ts"
     },
+    "./permissions": {
+      "default": "./src/permissions.ts"
+    },
     "./orpc": {
       "default": "./src/orpc.ts"
     }

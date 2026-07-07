@@ -1,3 +1,4 @@
+import type { permissionStatements } from "@bmhkms/client/permissions";
 import { Link } from "@tanstack/react-router";
 import { ChevronDownIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -15,10 +16,15 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+type StaffSidebarPermissions = {
+  [Key in keyof typeof permissionStatements]?: (typeof permissionStatements)[Key][number][];
+};
+
 interface StaffSidebarItem {
   activeRegex?: RegExp;
   icon: LucideIcon;
   label: string;
+  permissions?: StaffSidebarPermissions;
   to: string;
 }
 
@@ -119,6 +125,7 @@ export type {
   StaffSidebarCollapsibleGroup,
   StaffSidebarGroup,
   StaffSidebarItem,
+  StaffSidebarPermissions,
   StaffSidebarStandardGroup,
 };
 export { StaffSidebarGroupSection };
