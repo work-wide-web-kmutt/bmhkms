@@ -1,0 +1,183 @@
+"use client";
+
+import type { Column } from "@tanstack/react-table";
+import { CirclePlusIcon, CheckIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+
+interface DataGridColumnFilterProps<TData, TValue> {
+  column?: Column<TData, TValue>;
+  title?: string;
+  options: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+}
+
+function DataGridColumnFilter<TData, TValue>({
+  column,
+  title,
+  options,
+}: DataGridColumnFilterProps<TData, TValue>) {
+  const facets = column?.getFacetedUniqueValues();
+  const filterValue = column?.getFilterValue();
+  const selectedValues = new Set(
+    Array.isArray(filterValue) ? (filterValue as string[]) : []
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredOptions = useMemo(() => {
+    if (!searchQuery) {
+      return options;
+    }
+    return options.filter((option) =>
+      option.label.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [options, searchQuery]);
+
+  function clearFilters() {
+    column?.setFilterValue(undefined);
+  }
+
+  function handleFilterOptionToggle(
+    optionValue: string,
+    isSelected: boolean
+  ): void {
+    if (isSelected) {
+      selectedValues.delete(optionValue);
+    } else {
+      selectedValues.add(optionValue);
+    }
+
+    const filterValues = [...selectedValues];
+    column?.setFilterValue(filterValues.length > 0 ? filterValues : undefined);
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger
+        render={
+          <Button variant="outline" size="sm">
+            <CirclePlusIcon className="size-4" />
+            {title}
+            {selectedValues?.size > 0 && (
+              <>
+                <Separator orientation="vertical" className="mx-2 h-4" />
+                <Badge
+                  variant="secondary"
+                  className="px-1 font-normal lg:hidden"
+                >
+                  {selectedValues.size}
+                </Badge>
+                <div className="hidden space-x-1 lg:flex">
+                  {selectedValues.size > 2 ? (
+                    <Badge variant="secondary" className="px-1 font-normal">
+                      {selectedValues.size} selected
+                    </Badge>
+                  ) : (
+                    options
+                      .filter((option) => selectedValues.has(option.value))
+                      .map((option) => (
+                        <Badge
+                          variant="secondary"
+                          key={option.value}
+                          className="px-1 font-normal"
+                        >
+                          {option.label}
+                        </Badge>
+                      ))
+                  )}
+                </div>
+              </>
+            )}
+          </Button>
+        }
+      />
+      <PopoverContent className="w-[200px] p-0" align="start">
+        <div className="p-2">
+          <Input
+            placeholder={title}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-8"
+          />
+        </div>
+        <div className="max-h-[300px] overflow-y-auto">
+          {filteredOptions.length === 0 ? (
+            <div className="text-muted-foreground py-6 text-center text-sm">
+              No results found.
+            </div>
+          ) : (
+            <div className="p-1">
+              {filteredOptions.map((option) => {
+                const isSelected = selectedValues.has(option.value);
+                const facetCount = facets?.get(option.value);
+                return (
+                  <button
+                    type="button"
+                    key={option.value}
+                    aria-pressed={isSelected}
+                    onClick={() => {
+                      handleFilterOptionToggle(option.value, isSelected);
+                    }}
+                    className={cn(
+                      "rounded-md relative flex cursor-pointer items-center gap-2 px-2 py-1.5 text-sm outline-hidden select-none",
+                      "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "border-primary rounded-sm flex h-4 w-4 items-center justify-center border",
+                        isSelected
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className="h-4 w-4" />
+                    </div>
+                    {option.icon && (
+                      <option.icon className="text-muted-foreground h-4 w-4" />
+                    )}
+                    <span>{option.label}</span>
+                    {facetCount !== undefined && (
+                      <span className="ms-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                        {facetCount}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {selectedValues.size > 0 && (
+            <>
+              <div className="bg-border -mx-1 my-1 h-px" />
+              <div className="p-1">
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground rounded-md relative flex cursor-pointer items-center justify-center px-2 py-1.5 text-sm outline-hidden select-none"
+                >
+                  Clear filters
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+export { DataGridColumnFilter, type DataGridColumnFilterProps };
