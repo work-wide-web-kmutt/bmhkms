@@ -464,6 +464,7 @@ function DataGridTableVirtual<TData>({
       ? virtualizer.measureElement
       : undefined;
   const resolvedFetchMoreOffset = Math.max(0, fetchMoreOffset);
+  const lastVirtualItemIndex = virtualItems.at(-1)?.index;
 
   useEffect(() => {
     if (
@@ -475,12 +476,14 @@ function DataGridTableVirtual<TData>({
       return;
     }
 
-    const lastItem = virtualItems.at(-1);
-    if (!lastItem) {
+    if (lastVirtualItemIndex === undefined) {
       return;
     }
 
-    if (lastItem.index >= centerRows.length - 1 - resolvedFetchMoreOffset) {
+    if (
+      lastVirtualItemIndex >=
+      centerRows.length - 1 - resolvedFetchMoreOffset
+    ) {
       onFetchMore?.();
     }
   }, [
@@ -489,9 +492,9 @@ function DataGridTableVirtual<TData>({
     isFetchingMore,
     isInfiniteMode,
     isVirtualizationEnabled,
+    lastVirtualItemIndex,
     onFetchMore,
     resolvedFetchMoreOffset,
-    virtualItems,
   ]);
 
   return (
