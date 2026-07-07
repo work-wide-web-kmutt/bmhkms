@@ -5,8 +5,8 @@ import oxfmtConfig from "./oxfmt.config";
 import oxlintConfig from "./oxlint.config";
 
 export default defineConfig({
-  fmt: oxfmtConfig satisfies UserConfig["fmt"],
-  lint: oxlintConfig satisfies UserConfig["lint"],
+  fmt: oxfmtConfig as UserConfig["fmt"],
+  lint: oxlintConfig as UserConfig["lint"],
   staged: {
     "!(*.gen).ts": "ultracite fix",
     "*.{css,md,json,jsonc}": "vp check --fix",
