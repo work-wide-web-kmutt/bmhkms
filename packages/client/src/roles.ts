@@ -6,14 +6,13 @@ export const actions = {
   },
   staff: {
     access: "access",
-    approval: "approval",
   },
 } as const;
 
 export const permissionStatements = {
   ...adminAc.statements,
   records: [actions.records.access],
-  staff: [actions.staff.access, actions.staff.approval],
+  staff: [actions.staff.access],
 } as const;
 
 export const roleNames = [
