@@ -1,30 +1,14 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboardIcon } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { useRouterState } from "@tanstack/react-router";
+import { LayoutDashboardIcon, UserCogIcon } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { StaffSidebarGroupSection } from "@/features/staff-sidebar/sidebar-group";
+import type { StaffSidebarGroup } from "@/features/staff-sidebar/sidebar-group";
 import UserDropdown from "@/features/user/dropdown";
-
-interface StaffSidebarItem {
-  activeRegex?: RegExp;
-  icon: LucideIcon;
-  label: string;
-  to: string;
-}
-
-interface StaffSidebarGroup {
-  items: StaffSidebarItem[];
-  label: string;
-}
 
 const staffSidebarGroups: StaffSidebarGroup[] = [
   {
@@ -37,6 +21,20 @@ const staffSidebarGroups: StaffSidebarGroup[] = [
       },
     ],
     label: "Overview",
+    type: "standard",
+  },
+  {
+    defaultOpen: true,
+    items: [
+      {
+        activeRegex: /^\/admin\/staff(?:\/.*)?$/u,
+        icon: UserCogIcon,
+        label: "Staff Directory",
+        to: "/admin/staff",
+      },
+    ],
+    label: "Admin",
+    type: "collapsible",
   },
 ];
 
@@ -52,29 +50,11 @@ function StaffSidebar() {
       </SidebarHeader>
       <SidebarContent>
         {staffSidebarGroups.map((group) => (
-          <SidebarGroup key={group.label}>
-            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              {group.items.map((item) => {
-                const isActive =
-                  pathname === item.to ||
-                  item.activeRegex?.test(pathname) === true;
-                const Icon = item.icon;
-
-                return (
-                  <SidebarMenuItem key={item.to}>
-                    <SidebarMenuButton
-                      isActive={isActive}
-                      render={<Link to={item.to} />}
-                    >
-                      <Icon />
-                      {item.label}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarGroupContent>
-          </SidebarGroup>
+          <StaffSidebarGroupSection
+            group={group}
+            key={group.label}
+            pathname={pathname}
+          />
         ))}
       </SidebarContent>
     </Sidebar>
