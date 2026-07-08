@@ -1,21 +1,84 @@
 import { db } from "@bmhkms/db";
 import { user } from "@bmhkms/db/schema/auth";
-import { and, asc, desc, or, sql } from "drizzle-orm";
+import { and, asc, desc, sql } from "drizzle-orm";
+import type { SQL } from "drizzle-orm";
 
+import { isDataGridFilterActive } from "../data-grid/filters";
+import { createDataGridListQuery } from "../data-grid/query";
+import { createTextFilterHandler } from "../data-grid/text";
 import { protectedProcedure, requirePermissions } from "../index";
 import {
   STAFF_ROLE_NAMES,
   staffListInputSchema,
   staffListOutputSchema,
 } from "../schemas/staff";
-import type { StaffListFilter } from "../schemas/staff";
-import {
-  buildCaseInsensitiveFilterPattern,
-  isStaffFilterActive,
-  normalizeStaffFilterValues,
-  resolveStaffListPagination,
-  SQL_LIKE_ESCAPE,
-} from "./staff.helpers";
+import type { StaffListFilter, StaffListInput } from "../schemas/staff";
+
+const staffSortRegistry = {
+  email: {
+    expression: sql<string>`lower(btrim(coalesce(${user.email}, '')))`,
+  },
+  name: {
+    expression: sql<string>`lower(btrim(coalesce(${user.name}, '')))`,
+  },
+} as const;
+
+const staffFilterHandlers = {
+  email: createTextFilterHandler<StaffListFilter>({
+    column: user.email,
+  }),
+  name: createTextFilterHandler<StaffListFilter>({
+    column: user.name,
+  }),
+} as const;
+
+const executeStaffList = createDataGridListQuery<
+  StaffListFilter,
+  "name" | "email",
+  StaffListInput["pageSize"],
+  SQL<boolean>,
+  SQL<string>,
+  SQL,
+  {
+    email: string;
+    id: string;
+    image: string | null;
+    name: string;
+  }
+>({
+  applySortDirection: (expression, direction) =>
+    direction === "asc" ? asc(expression) : desc(expression),
+  baseCondition: buildStaffRoleCondition(),
+  combineConditions: (conditions) => and(...conditions) as SQL<boolean>,
+  count: async ({ where }) => {
+    const [countRow] = await db
+      .select({
+        total: sql<number>`count(*)::int`,
+      })
+      .from(user)
+      .where(where);
+
+    return countRow?.total ?? 0;
+  },
+  filterHandlers: staffFilterHandlers,
+  isFilterActive: (filter) =>
+    isDataGridFilterActive(filter, ["empty", "not_empty"]),
+  select: ({ limit, offset, orderBy, where }) =>
+    db
+      .select({
+        email: user.email,
+        id: user.id,
+        image: user.image,
+        name: user.name,
+      })
+      .from(user)
+      .where(where)
+      .orderBy(...orderBy)
+      .limit(limit)
+      .offset(offset),
+  sortRegistry: staffSortRegistry,
+  stableTieBreak: asc(user.id),
+});
 
 const staffListProcedure = protectedProcedure
   .use(
@@ -29,59 +92,7 @@ const staffListProcedure = protectedProcedure
   })
   .input(staffListInputSchema)
   .output(staffListOutputSchema)
-  .handler(async ({ input }) => {
-    const activeFilters = input.filters.filter(isStaffFilterActive);
-    const whereClause = and(
-      buildStaffRoleCondition(),
-      ...activeFilters.flatMap((filter) => {
-        const condition = buildTextFilterCondition(filter);
-        return condition ? [condition] : [];
-      })
-    );
-
-    const [{ total }] = await db
-      .select({
-        total: sql<number>`count(*)::int`,
-      })
-      .from(user)
-      .where(whereClause);
-
-    const pagination = resolveStaffListPagination(
-      input.page,
-      input.pageSize,
-      total
-    );
-    const sortColumn = input.sortBy === "email" ? user.email : user.name;
-    const normalizedSortValue = sql<string>`lower(btrim(coalesce(${sortColumn}, '')))`;
-
-    const items = await db
-      .select({
-        email: user.email,
-        id: user.id,
-        image: user.image,
-        name: user.name,
-      })
-      .from(user)
-      .where(whereClause)
-      .orderBy(
-        input.sortDir === "asc"
-          ? asc(normalizedSortValue)
-          : desc(normalizedSortValue),
-        asc(user.id)
-      )
-      .limit(input.pageSize)
-      .offset(pagination.offset);
-
-    return {
-      items,
-      pagination: {
-        page: pagination.page,
-        pageCount: pagination.pageCount,
-        pageSize: pagination.pageSize,
-        total: pagination.total,
-      },
-    };
-  });
+  .handler(({ input }) => executeStaffList(input));
 
 function buildStaffRoleCondition() {
   const staffRoleValues = sql.join(
@@ -99,95 +110,6 @@ function buildStaffRoleCondition() {
     )
   `;
 }
-
-function buildTrimmedTextValue(column: typeof user.name | typeof user.email) {
-  return sql<string>`btrim(coalesce(${column}, ''))`;
-}
-
-function buildIlikeCondition(
-  column: typeof user.name | typeof user.email,
-  pattern: string
-) {
-  const trimmedValue = buildTrimmedTextValue(column);
-
-  return sql<boolean>`
-    ${trimmedValue} ilike ${pattern} escape ${SQL_LIKE_ESCAPE}
-  `;
-}
-
-function buildTextFilterCondition(filter: StaffListFilter) {
-  const column = filter.field === "email" ? user.email : user.name;
-  const normalizedValues = normalizeStaffFilterValues(filter.values);
-
-  if (filter.operator === "empty") {
-    return sql<boolean>`coalesce(btrim(${column}), '') = ''`;
-  }
-
-  if (filter.operator === "not_empty") {
-    return sql<boolean>`coalesce(btrim(${column}), '') <> ''`;
-  }
-
-  if (normalizedValues.length === 0) {
-    return;
-  }
-
-  if (filter.operator === "contains") {
-    return or(
-      ...normalizedValues.map((value) =>
-        buildIlikeCondition(
-          column,
-          buildCaseInsensitiveFilterPattern("contains", value)
-        )
-      )
-    );
-  }
-
-  if (filter.operator === "not_contains") {
-    return and(
-      ...normalizedValues.map((value) => {
-        const condition = buildIlikeCondition(
-          column,
-          buildCaseInsensitiveFilterPattern("contains", value)
-        );
-
-        return sql<boolean>`not (${condition})`;
-      })
-    );
-  }
-
-  if (filter.operator === "starts_with") {
-    return or(
-      ...normalizedValues.map((value) =>
-        buildIlikeCondition(
-          column,
-          buildCaseInsensitiveFilterPattern("starts_with", value)
-        )
-      )
-    );
-  }
-
-  if (filter.operator === "ends_with") {
-    return or(
-      ...normalizedValues.map((value) =>
-        buildIlikeCondition(
-          column,
-          buildCaseInsensitiveFilterPattern("ends_with", value)
-        )
-      )
-    );
-  }
-
-  const [exactValue] = normalizedValues;
-
-  if (!exactValue) {
-    return;
-  }
-
-  return sql<boolean>`
-    lower(${buildTrimmedTextValue(column)}) = ${exactValue.toLowerCase()}
-  `;
-}
-
 export const staffRouter = {
   list: staffListProcedure,
 };
