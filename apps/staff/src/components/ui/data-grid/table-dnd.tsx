@@ -24,7 +24,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { Fragment, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { useDataGrid } from "@/components/ui/data-grid";
+import { useDataGridContext } from "@/components/ui/data-grid";
 import {
   DataGridTableBase,
   DataGridTableBody,
@@ -48,7 +48,7 @@ function DataGridTableDndHeader<TData>({
 }: {
   header: Header<TData, unknown>;
 }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
   const { column } = header;
 
   // Check if column ordering is enabled for this column
@@ -116,7 +116,7 @@ function DataGridTableDndHeader<TData>({
 }
 
 function DataGridTableDndCell<TData>({ cell }: { cell: Cell<TData, unknown> }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
   const { isDragging, setNodeRef, transform, transition } = useSortable({
     id: cell.column.id,
   });
@@ -147,7 +147,7 @@ function DataGridTableDnd<TData>({
   handleDragEnd: (event: DragEndEvent) => void;
   footerContent?: ReactNode;
 }) {
-  const { table, isLoading, props } = useDataGrid();
+  const { table, isLoading, props } = useDataGridContext();
   const { pagination } = table.getState();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDraggingColumn, setIsDraggingColumn] = useState(false);

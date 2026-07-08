@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { StaffDirectoryTable } from "@/features/admin/staff-directory/table";
-import { staffDirectorySearchSchema } from "@/features/admin/staff-directory/table/search-params";
+import { staffDirectorySearchSchema } from "@/features/admin/staff-directory/table/search";
 
 export const Route = reactRouter.createFileRoute("/_protected/admin/staff")({
   component: RouteComponent,

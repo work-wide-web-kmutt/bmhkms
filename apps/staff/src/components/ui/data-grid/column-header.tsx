@@ -16,7 +16,10 @@ import type { HTMLAttributes, ReactNode } from "react";
 import { memo, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
-import { getColumnHeaderLabel, useDataGrid } from "@/components/ui/data-grid";
+import {
+  getColumnHeaderLabel,
+  useDataGridContext,
+} from "@/components/ui/data-grid";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -54,7 +57,7 @@ function DataGridColumnHeaderInner<TData, TValue>({
   filter,
   visibility = false,
 }: DataGridColumnHeaderProps<TData, TValue>) {
-  const { isLoading, table, props, recordCount } = useDataGrid();
+  const { isLoading, table, props, recordCount } = useDataGridContext();
   const resolvedTitle = title ?? getColumnHeaderLabel(column);
 
   const { columnOrder } = table.getState();

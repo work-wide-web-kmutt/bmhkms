@@ -22,7 +22,7 @@ import {
 } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { useDataGrid } from "@/components/ui/data-grid";
+import { useDataGridContext } from "@/components/ui/data-grid";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
@@ -391,7 +391,7 @@ function hasDataGridTableRightPinnedColumns<TData>(table: Table<TData>) {
 }
 
 function DataGridTableFillCol() {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   if (!props.tableLayout?.columnsResizable) {
     return null;
@@ -406,7 +406,7 @@ function DataGridTableFillCol() {
 }
 
 function DataGridTableFillHeadCell() {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   if (!props.tableLayout?.columnsResizable) {
     return null;
@@ -423,7 +423,7 @@ function DataGridTableFillHeadCell() {
 }
 
 function DataGridTableFillBodyCell() {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   if (!props.tableLayout?.columnsResizable) {
     return null;
@@ -440,7 +440,7 @@ function DataGridTableFillBodyCell() {
 }
 
 function DataGridTableFillFootCell() {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   if (!props.tableLayout?.columnsResizable) {
     return null;
@@ -457,7 +457,7 @@ function DataGridTableFillFootCell() {
 }
 
 function DataGridTableBase({ children }: { children: ReactNode }) {
-  const { props, table } = useDataGrid();
+  const { props, table } = useDataGridContext();
   const leftVisibleColumns = table.getLeftVisibleLeafColumns();
   const centerVisibleColumns = table.getCenterVisibleLeafColumns();
   const rightVisibleColumns = table.getRightVisibleLeafColumns();
@@ -553,7 +553,7 @@ function DataGridTableViewport({
   viewportRef?: Ref<HTMLDivElement>;
   style?: CSSProperties;
 }) {
-  const { props, table } = useDataGrid();
+  const { props, table } = useDataGridContext();
   const didApplyAutoSizeColumnRef = useRef<string | null>(null);
   const [viewportElement, setViewportElement] = useState<HTMLDivElement | null>(
     null
@@ -665,7 +665,7 @@ function DataGridTableViewport({
 }
 
 function DataGridTableHead({ children }: { children: ReactNode }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   return (
     <thead
@@ -686,7 +686,7 @@ function DataGridTableHeadRow({
   children: ReactNode;
   rowId: string;
 }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   return (
     <tr
@@ -714,7 +714,7 @@ function DataGridTableHeadRowCell<TData>({
   dndRef?: React.Ref<HTMLTableCellElement>;
   dndStyle?: CSSProperties;
 }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   const { column } = header;
   const isPinned = column.getIsPinned();
@@ -792,7 +792,7 @@ function DataGridTableHeadRowCellResize<TData>({
 }: {
   header: Header<TData, unknown>;
 }) {
-  const { props, table } = useDataGrid();
+  const { props, table } = useDataGridContext();
   const { column } = header;
   const isPinned = column.getIsPinned();
   const isLastVisibleColumn =
@@ -856,7 +856,7 @@ function DataGridTableResizeIndicator({
 }: {
   viewportElement: HTMLDivElement | null;
 }) {
-  const { props, table } = useDataGrid();
+  const { props, table } = useDataGridContext();
   const { columnSizingInfo } = table.getState();
   const resizingColumnId = columnSizingInfo.isResizingColumn;
   const resizeMode =
@@ -924,7 +924,7 @@ function DataGridTableRowSpacer() {
 }
 
 function DataGridTableBody({ children }: { children: ReactNode }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   return (
     <tbody
@@ -941,7 +941,7 @@ function DataGridTableBody({ children }: { children: ReactNode }) {
 }
 
 function DataGridTableFoot({ children }: { children: ReactNode }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
   return (
     <tfoot
       data-slot="data-grid-table-foot"
@@ -953,7 +953,7 @@ function DataGridTableFoot({ children }: { children: ReactNode }) {
 }
 
 function DataGridTableFootRow({ children }: { children: ReactNode }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
   const footRowBottomBorderClasses = "[&:not(:last-child)>td]:border-b";
 
   return (
@@ -980,7 +980,7 @@ function DataGridTableFootRowCell({
   colSpan?: number;
   className?: string;
 }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
   const spacing = footerCellSpacingVariants({
     size: props.tableLayout?.dense ? "dense" : "default",
   });
@@ -1001,7 +1001,7 @@ function DataGridTableFootRowCell({
 }
 
 function DataGridTableBodyRowSkeleton({ children }: { children: ReactNode }) {
-  const { table, props } = useDataGrid();
+  const { table, props } = useDataGridContext();
 
   return (
     <tr
@@ -1030,7 +1030,7 @@ function DataGridTableBodyRowSkeletonCell<TData>({
   children: ReactNode;
   column: Column<TData>;
 }) {
-  const { props, table } = useDataGrid();
+  const { props, table } = useDataGridContext();
   const bodyCellSpacing = bodyCellSpacingVariants({
     size: props.tableLayout?.dense ? "dense" : "default",
   });
@@ -1079,7 +1079,7 @@ function DataGridTableBodyRow<TData>({
   dndRef?: React.Ref<HTMLTableRowElement>;
   dndStyle?: CSSProperties;
 }) {
-  const { props, table } = useDataGrid();
+  const { props, table } = useDataGridContext();
   const isRowPinned = row.getIsPinned();
 
   const bodyRowBottomBorderClasses =
@@ -1126,7 +1126,7 @@ function DataGridTableBodyRow<TData>({
 }
 
 function DataGridTableBodyRowExpandded<TData>({ row }: { row: Row<TData> }) {
-  const { props, table } = useDataGrid();
+  const { props, table } = useDataGridContext();
   const bodyRowBottomBorderClasses =
     "[&:not(:last-child)>td]:border-b [tbody:has(+tfoot)_&:last-child>td]:border-b [*:has(>[data-slot=data-grid]+[data-slot=data-grid-pagination])_[data-slot=data-grid]_&:last-child>td]:border-b";
 
@@ -1160,7 +1160,7 @@ function DataGridTableBodyRowCell<TData>({
   dndRef?: React.Ref<HTMLTableCellElement>;
   dndStyle?: CSSProperties;
 }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   const { column, row } = cell;
   const isPinned = column.getIsPinned();
@@ -1223,7 +1223,7 @@ function DataGridTableRenderedRow<TData>({
   pinnedBoundary?: DataGridTablePinnedBoundary;
   rowRef?: React.Ref<HTMLTableRowElement>;
 }) {
-  const { props, table } = useDataGrid();
+  const { props, table } = useDataGridContext();
   const leftVisibleCells = row.getLeftVisibleCells();
   const centerVisibleCells = row.getCenterVisibleCells();
   const rightVisibleCells = row.getRightVisibleCells();
@@ -1261,7 +1261,7 @@ function DataGridTableRenderedRow<TData>({
 }
 
 function DataGridTableEmpty() {
-  const { table, props } = useDataGrid();
+  const { table, props } = useDataGridContext();
   const visibleColumnCount =
     getDataGridTableOrderedVisibleColumns(table).length +
     (props.tableLayout?.columnsResizable ? 1 : 0);
@@ -1279,7 +1279,7 @@ function DataGridTableEmpty() {
 }
 
 function DataGridTableLoader() {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
 
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -1361,7 +1361,7 @@ function DataGridTableRowSelect<TData>({ row }: { row: Row<TData> }) {
 }
 
 function DataGridTableRowSelectAll() {
-  const { table, recordCount, isLoading } = useDataGrid();
+  const { table, recordCount, isLoading } = useDataGridContext();
 
   const isAllSelected = table.getIsAllPageRowsSelected();
   const isSomeSelected = table.getIsSomePageRowsSelected();
@@ -1379,7 +1379,7 @@ function DataGridTableRowSelectAll() {
 }
 
 function DataGridTableBodyRows<TData>({ table }: { table: Table<TData> }) {
-  const { isLoading, props } = useDataGrid();
+  const { isLoading, props } = useDataGridContext();
   const { pagination } = table.getState();
 
   if (isLoading && props.loadingMode === "skeleton" && pagination?.pageSize) {
@@ -1479,7 +1479,7 @@ const MemoizedDataGridTableBodyRows = memo(
 ) as typeof DataGridTableBodyRows;
 
 function DataGridTableHeader() {
-  const { table, props } = useDataGrid();
+  const { table, props } = useDataGridContext();
   const mergedHeaderGroups = getDataGridTableMergedHeaderGroups(table);
   const hasRightPinnedColumns = hasDataGridTableRightPinnedColumns(table);
 
@@ -1550,7 +1550,7 @@ function DataGridTable({
   footerContent?: ReactNode;
   renderHeader?: boolean;
 }) {
-  const { table, props } = useDataGrid();
+  const { table, props } = useDataGridContext();
   const mergedHeaderGroups = getDataGridTableMergedHeaderGroups(table);
   const hasRightPinnedColumns = hasDataGridTableRightPinnedColumns(table);
 

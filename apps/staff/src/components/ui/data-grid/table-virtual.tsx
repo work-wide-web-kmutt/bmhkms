@@ -10,7 +10,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import type { CSSProperties, ReactNode } from "react";
 import { memo, useCallback, useEffect, useState } from "react";
 
-import { useDataGrid } from "@/components/ui/data-grid";
+import { useDataGridContext } from "@/components/ui/data-grid";
 import {
   DataGridTableBase,
   DataGridTableBody,
@@ -88,7 +88,7 @@ function DataGridTableVirtualPinnedPlaceholderCell<TData>({
 }: {
   column: Column<TData>;
 }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
   const isPinned = column.getIsPinned();
   const isLastLeftPinned =
     isPinned === "left" && column.getIsLastColumn("left");
@@ -136,7 +136,7 @@ function DataGridTableVirtualUtilityRow<TData>({
   rowClassName?: string;
   ariaHidden?: boolean;
 }) {
-  const { props } = useDataGrid();
+  const { props } = useDataGridContext();
   const leftVisibleColumns = table.getLeftVisibleLeafColumns();
   const centerVisibleColumns = table.getCenterVisibleLeafColumns();
   const rightVisibleColumns = table.getRightVisibleLeafColumns();
@@ -370,7 +370,7 @@ function DataGridTableVirtual<TData>({
   fetchMoreOffset = 0,
   virtualizerOptions,
 }: DataGridTableVirtualProps<TData>) {
-  const { table, props } = useDataGrid();
+  const { table, props } = useDataGridContext();
   const mergedHeaderGroups = getDataGridTableMergedHeaderGroups(table);
   const hasRightPinnedColumns = hasDataGridTableRightPinnedColumns(table);
   const { topRows, centerRows, bottomRows } = getDataGridTableRowSections(

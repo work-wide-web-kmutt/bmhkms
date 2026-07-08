@@ -5,7 +5,7 @@ import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import type { PointerEvent, ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useDataGrid } from "@/components/ui/data-grid";
+import { useDataGridContext } from "@/components/ui/data-grid";
 import { cn } from "@/lib/utils";
 
 const MIN_THUMB_SIZE = 24;
@@ -91,7 +91,7 @@ function DataGridScrollArea({
   orientation = "both",
   ...props
 }: DataGridScrollAreaProps) {
-  const { props: dataGridProps } = useDataGrid();
+  const { props: dataGridProps } = useDataGridContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef<{

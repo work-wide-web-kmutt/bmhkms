@@ -116,10 +116,12 @@ const DataGridContext = createContext<
   DataGridContextProps<any> | undefined
 >(undefined);
 
-function useDataGrid() {
+function useDataGridContext() {
   const context = useContext(DataGridContext);
   if (!context) {
-    throw new Error("useDataGrid must be used within a DataGridProvider");
+    throw new Error(
+      "useDataGridContext must be used within a DataGridProvider"
+    );
   }
   return context;
 }
@@ -265,4 +267,4 @@ function DataGridContainer({
   );
 }
 
-export { useDataGrid, DataGridProvider, DataGrid, DataGridContainer };
+export { useDataGridContext, DataGridProvider, DataGrid, DataGridContainer };

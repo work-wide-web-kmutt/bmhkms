@@ -31,7 +31,7 @@ import {
 } from "react";
 
 import { Button } from "@/components/ui/button";
-import { useDataGrid } from "@/components/ui/data-grid";
+import { useDataGridContext } from "@/components/ui/data-grid";
 import {
   DataGridTableBase,
   DataGridTableBody,
@@ -138,7 +138,7 @@ function DataGridTableDndRows<TData>({
   dataIds: UniqueIdentifier[];
   footerContent?: ReactNode;
 }) {
-  const { table, isLoading, props } = useDataGrid();
+  const { table, isLoading, props } = useDataGridContext();
   const { pagination } = table.getState();
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [isDraggingRow, setIsDraggingRow] = useState(false);

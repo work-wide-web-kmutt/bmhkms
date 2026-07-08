@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import React from "react";
 
 import { Button } from "@/components/ui/button";
-import { useDataGrid } from "@/components/ui/data-grid";
+import { useDataGridContext } from "@/components/ui/data-grid";
 import {
   Select,
   SelectContent,
@@ -32,7 +32,7 @@ interface DataGridPaginationProps {
 }
 
 function DataGridPagination(props: DataGridPaginationProps): React.JSX.Element {
-  const { table, recordCount, isLoading } = useDataGrid();
+  const { table, recordCount, isLoading } = useDataGridContext();
 
   const defaultProps: Partial<DataGridPaginationProps> = {
     ellipsisText: "...",
@@ -142,7 +142,7 @@ function DataGridPagination(props: DataGridPaginationProps): React.JSX.Element {
         mergedProps.className
       )}
     >
-      <div className="order-2 flex flex-wrap items-center space-x-2.5 pb-2.5 sm:order-1 sm:pb-0">
+      <div className="order-2 flex flex-wrap items-center gap-2.5 pb-2.5 sm:order-1 sm:pb-0">
         {isLoading ? (
           mergedProps.sizesSkeleton
         ) : (
@@ -176,22 +176,20 @@ function DataGridPagination(props: DataGridPaginationProps): React.JSX.Element {
           mergedProps.infoSkeleton
         ) : (
           <>
-            <div className="text-muted-foreground order-2 text-sm text-nowrap sm:order-1">
+            <div className="text-muted-foreground order-2 text-nowrap text-sm sm:order-1">
               {paginationInfo}
             </div>
             {pageCount > 1 && (
-              <div className="order-1 flex items-center space-x-1">
+              <div className="order-1 flex items-center gap-1">
                 <Button
                   size="icon-sm"
                   variant="ghost"
                   className={btnArrowClasses}
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
+                  aria-label={mergedProps.previousPageLabel}
                 >
-                  <span className="sr-only">
-                    {mergedProps.previousPageLabel}
-                  </span>
-                  <ChevronLeftIcon className="size-4" />
+                  <ChevronLeftIcon aria-hidden="true" />
                 </Button>
 
                 {renderEllipsisPrevButton()}
@@ -206,9 +204,9 @@ function DataGridPagination(props: DataGridPaginationProps): React.JSX.Element {
                   className={btnArrowClasses}
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
+                  aria-label={mergedProps.nextPageLabel}
                 >
-                  <span className="sr-only">{mergedProps.nextPageLabel}</span>
-                  <ChevronRightIcon className="size-4" />
+                  <ChevronRightIcon aria-hidden="true" />
                 </Button>
               </div>
             )}
