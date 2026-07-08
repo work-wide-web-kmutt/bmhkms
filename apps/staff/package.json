@@ -24,6 +24,7 @@
     "@tanstack/react-router": "^1.168.22",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.14.5",
+    "@tanstack/zod-adapter": "^1.167.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cnfast": "^0.0.8",

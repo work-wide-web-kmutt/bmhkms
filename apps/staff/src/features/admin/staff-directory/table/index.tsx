@@ -1,12 +1,18 @@
-import type { PaginationState, SortingState } from "@tanstack/react-table";
+import { orpc } from "@bmhkms/client/orpc";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { getRouteApi } from "@tanstack/react-router";
 import {
+  functionalUpdate,
   getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import type {
+  OnChangeFn,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
 import { FunnelXIcon, ListFilterIcon, MailIcon, UserIcon } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { DataGrid, DataGridContainer } from "@/components/ui/data-grid";
@@ -17,10 +23,16 @@ import { Filters } from "@/components/ui/filters";
 import type { Filter, FilterFieldConfig } from "@/components/ui/filters";
 
 import { staffDirectoryColumns } from "./columns";
-import { staffDirectoryMockData } from "./mock-data";
-import type { StaffDirectoryRow } from "./mock-data";
+import {
+  fromSearchFilters,
+  STAFF_DIRECTORY_PAGE_SIZES,
+  toSearchFilters,
+} from "./search-params";
 
-function getActiveFilters(filters: Filter[]): Filter[] {
+const staffRouteApi = getRouteApi("/_protected/admin/staff");
+const FILTER_SYNC_DEBOUNCE_MS = 250;
+
+function getActiveFilters<T>(filters: Filter<T>[]): Filter<T>[] {
   return filters.filter((filter) => {
     const { values } = filter;
 
@@ -48,107 +60,17 @@ function getActiveFilters(filters: Filter[]): Filter[] {
   });
 }
 
-function normalizeString(value: unknown): string {
-  return String(value ?? "")
-    .trim()
-    .toLowerCase();
-}
-
-function isEmptyValue(value: unknown): boolean {
-  if (value === null || value === undefined) {
-    return true;
-  }
-
-  return typeof value === "string" && value.trim().length === 0;
-}
-
-function matchesTextFilter(
-  fieldValue: unknown,
-  operator: string,
-  values: unknown[]
-): boolean {
-  const normalizedFieldValue = normalizeString(fieldValue);
-  const normalizedValues = values
-    .map((value) => normalizeString(value))
-    .filter((value) => value.length > 0);
-
-  if (operator === "empty") {
-    return isEmptyValue(fieldValue);
-  }
-
-  if (operator === "not_empty") {
-    return !isEmptyValue(fieldValue);
-  }
-
-  if (normalizedValues.length === 0) {
-    return true;
-  }
-
-  if (operator === "contains") {
-    return normalizedValues.some((value) =>
-      normalizedFieldValue.includes(value)
-    );
-  }
-
-  if (operator === "not_contains") {
-    return normalizedValues.every(
-      (value) => !normalizedFieldValue.includes(value)
-    );
-  }
-
-  if (operator === "starts_with") {
-    return normalizedValues.some((value) =>
-      normalizedFieldValue.startsWith(value)
-    );
-  }
-
-  if (operator === "ends_with") {
-    return normalizedValues.some((value) =>
-      normalizedFieldValue.endsWith(value)
-    );
-  }
-
-  if (operator === "is") {
-    return normalizedFieldValue === normalizedValues[0];
-  }
-
-  return true;
-}
-
-function applyFiltersToData(
-  data: StaffDirectoryRow[],
-  filters: Filter[]
-): StaffDirectoryRow[] {
-  const activeFilters = getActiveFilters(filters);
-
-  if (activeFilters.length === 0) {
-    return data;
-  }
-
-  return data.filter((row) =>
-    activeFilters.every((filter) => {
-      const fieldValue = row[filter.field as keyof StaffDirectoryRow];
-
-      if (filter.field === "name" || filter.field === "email") {
-        return matchesTextFilter(fieldValue, filter.operator, filter.values);
-      }
-
-      return true;
-    })
-  );
-}
-
 function StaffDirectoryTable() {
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 5,
-  });
-  const [sorting, setSorting] = useState<SortingState>([
-    { desc: true, id: "name" },
-  ]);
-  const [filters, setFilters] = useState<Filter[]>([]);
+  const navigate = staffRouteApi.useNavigate();
+  const search = staffRouteApi.useSearch();
+  const [draftFilters, setDraftFilters] = useState<Filter<string>[] | null>(
+    null
+  );
+  const filterSyncTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
-  const fields = useMemo<FilterFieldConfig[]>(
+  const fields = useMemo<FilterFieldConfig<string>[]>(
     () => [
       {
         className: "w-40",
@@ -170,44 +92,173 @@ function StaffDirectoryTable() {
     []
   );
 
-  const filteredData = useMemo(
-    () => applyFiltersToData(staffDirectoryMockData, filters),
-    [filters]
+  const committedFilters = useMemo(
+    () => fromSearchFilters(search.filters),
+    [search.filters]
+  );
+  const displayFilters = draftFilters ?? committedFilters;
+  const queryInput = useMemo(
+    () => ({
+      filters: search.filters,
+      page: search.page,
+      pageSize: search.pageSize,
+      sortBy: search.sortBy,
+      sortDir: search.sortDir,
+    }),
+    [
+      search.filters,
+      search.page,
+      search.pageSize,
+      search.sortBy,
+      search.sortDir,
+    ]
   );
 
-  const activeFilters = useMemo(() => getActiveFilters(filters), [filters]);
+  const staffDirectoryQuery = useQuery(
+    orpc.staff.list.queryOptions({
+      input: queryInput,
+      placeholderData: keepPreviousData,
+    })
+  );
+
+  const pagination = useMemo<PaginationState>(
+    () => ({
+      pageIndex: search.page - 1,
+      pageSize: search.pageSize,
+    }),
+    [search.page, search.pageSize]
+  );
+
+  const sorting = useMemo<SortingState>(
+    () => [{ desc: search.sortDir === "desc", id: search.sortBy }],
+    [search.sortBy, search.sortDir]
+  );
+
+  useEffect(
+    () => () => {
+      if (filterSyncTimeoutRef.current !== null) {
+        clearTimeout(filterSyncTimeoutRef.current);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    setDraftFilters(null);
+  }, [search.filters]);
 
   const handleFiltersChange = useCallback(
-    (newFilters: Filter[]) => {
-      const previousActiveFilters = getActiveFilters(filters);
+    (newFilters: Filter<string>[]) => {
       const nextActiveFilters = getActiveFilters(newFilters);
-      const previousSerialized = JSON.stringify(previousActiveFilters);
-      const nextSerialized = JSON.stringify(nextActiveFilters);
+      const nextSearchFilters = toSearchFilters(nextActiveFilters);
+      const previousSerialized = JSON.stringify(search.filters);
+      const nextSerialized = JSON.stringify(nextSearchFilters);
 
-      setFilters(newFilters);
+      setDraftFilters(newFilters);
+
+      if (filterSyncTimeoutRef.current !== null) {
+        clearTimeout(filterSyncTimeoutRef.current);
+      }
 
       if (previousSerialized === nextSerialized) {
         return;
       }
 
-      setPagination((previousPagination) => ({
-        ...previousPagination,
-        pageIndex: 0,
-      }));
+      filterSyncTimeoutRef.current = setTimeout(() => {
+        void navigate({
+          replace: true,
+          search: (previousSearch) => ({
+            ...previousSearch,
+            filters: nextSearchFilters,
+            page: 1,
+          }),
+        });
+      }, FILTER_SYNC_DEBOUNCE_MS);
     },
-    [filters]
+    [navigate, search.filters]
   );
+
+  const handlePaginationChange = useCallback<OnChangeFn<PaginationState>>(
+    (updater) => {
+      const nextPagination = functionalUpdate(updater, pagination);
+      const pageSizeChanged = nextPagination.pageSize !== pagination.pageSize;
+
+      if (pageSizeChanged) {
+        void navigate({
+          replace: true,
+          search: (previousSearch) => ({
+            ...previousSearch,
+            page: 1,
+            pageSize: nextPagination.pageSize,
+          }),
+        });
+        return;
+      }
+
+      if (nextPagination.pageIndex === pagination.pageIndex) {
+        return;
+      }
+
+      void navigate({
+        search: (previousSearch) => ({
+          ...previousSearch,
+          page: nextPagination.pageIndex + 1,
+        }),
+      });
+    },
+    [navigate, pagination]
+  );
+
+  const handleSortingChange = useCallback<OnChangeFn<SortingState>>(
+    (updater) => {
+      const nextSorting = functionalUpdate(updater, sorting);
+      const [nextSort] = nextSorting;
+      const nextSortBy = nextSort?.id === "name" ? "name" : "name";
+      const nextSortDir = nextSort?.desc ? "desc" : "asc";
+
+      if (nextSortBy === search.sortBy && nextSortDir === search.sortDir) {
+        return;
+      }
+
+      void navigate({
+        replace: true,
+        search: (previousSearch) => ({
+          ...previousSearch,
+          page: 1,
+          sortBy: nextSortBy,
+          sortDir: nextSortDir,
+        }),
+      });
+    },
+    [navigate, search.sortBy, search.sortDir, sorting]
+  );
+
+  useEffect(() => {
+    const canonicalPage = staffDirectoryQuery.data?.pagination.page;
+
+    if (!canonicalPage || canonicalPage === search.page) {
+      return;
+    }
+
+    void navigate({
+      replace: true,
+      search: (previousSearch) => ({
+        ...previousSearch,
+        page: canonicalPage,
+      }),
+    });
+  }, [navigate, search.page, staffDirectoryQuery.data?.pagination.page]);
 
   const table = useReactTable({
     columns: staffDirectoryColumns,
-    data: filteredData,
+    data: staffDirectoryQuery.data?.items ?? [],
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getRowId: (row) => row.id,
-    getSortedRowModel: getSortedRowModel(),
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    pageCount: Math.ceil(filteredData.length / pagination.pageSize),
+    manualPagination: true,
+    manualSorting: true,
+    onPaginationChange: handlePaginationChange,
+    onSortingChange: handleSortingChange,
+    pageCount: staffDirectoryQuery.data?.pagination.pageCount ?? 1,
     state: {
       pagination,
       sorting,
@@ -215,13 +266,17 @@ function StaffDirectoryTable() {
   });
 
   return (
-    <DataGrid recordCount={filteredData.length} table={table}>
+    <DataGrid
+      isLoading={staffDirectoryQuery.isLoading}
+      recordCount={staffDirectoryQuery.data?.pagination.total ?? 0}
+      table={table}
+    >
       <div className="w-full space-y-3">
         <div className="flex items-start gap-2.5">
           <div className="flex-1">
-            <Filters
+            <Filters<string>
               fields={fields}
-              filters={filters}
+              filters={displayFilters}
               onChange={handleFiltersChange}
               size="sm"
               trigger={
@@ -231,14 +286,22 @@ function StaffDirectoryTable() {
               }
             />
           </div>
-          {activeFilters.length > 0 && (
+          {displayFilters.length > 0 && (
             <Button
               onClick={() => {
-                setFilters([]);
-                setPagination((previousPagination) => ({
-                  ...previousPagination,
-                  pageIndex: 0,
-                }));
+                if (filterSyncTimeoutRef.current !== null) {
+                  clearTimeout(filterSyncTimeoutRef.current);
+                }
+
+                setDraftFilters(null);
+                void navigate({
+                  replace: true,
+                  search: (previousSearch) => ({
+                    ...previousSearch,
+                    filters: [],
+                    page: 1,
+                  }),
+                });
               }}
               size="sm"
               variant="outline"
@@ -253,7 +316,7 @@ function StaffDirectoryTable() {
             <DataGridTable />
           </DataGridScrollArea>
         </DataGridContainer>
-        <DataGridPagination />
+        <DataGridPagination sizes={[...STAFF_DIRECTORY_PAGE_SIZES]} />
       </div>
     </DataGrid>
   );

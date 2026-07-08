@@ -1,3 +1,4 @@
+import { auth } from "@bmhkms/auth";
 import { ORPCError, os } from "@orpc/server";
 
 import type { Context } from "./context";
@@ -12,9 +13,27 @@ const requireAuth = o.middleware(({ context, next }) => {
   }
   return next({
     context: {
+      headers: context.headers,
       session: context.session,
     },
   });
 });
 
 export const protectedProcedure = publicProcedure.use(requireAuth);
+
+export function requirePermissions(permissions: Record<string, string[]>) {
+  return o.middleware(async ({ context, next }) => {
+    const result = await auth.api.userHasPermission({
+      body: {
+        permissions,
+      },
+      headers: context.headers,
+    });
+
+    if (!result.success) {
+      throw new ORPCError("FORBIDDEN");
+    }
+
+    return next();
+  });
+}

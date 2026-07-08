@@ -1,4 +1,5 @@
 import * as reactRouter from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 
 import {
   Card,
@@ -8,9 +9,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { StaffDirectoryTable } from "@/features/admin/staff-directory/table";
+import { staffDirectorySearchSchema } from "@/features/admin/staff-directory/table/search-params";
 
 export const Route = reactRouter.createFileRoute("/_protected/admin/staff")({
   component: RouteComponent,
+  validateSearch: zodValidator(staffDirectorySearchSchema),
 });
 
 function RouteComponent() {
@@ -20,7 +23,7 @@ function RouteComponent() {
         <CardHeader>
           <CardTitle>Staff Directory</CardTitle>
           <CardDescription>
-            Mock staff records for the admin directory table.
+            Live staff directory records loaded from the API.
           </CardDescription>
         </CardHeader>
         <CardContent className="px-1">
