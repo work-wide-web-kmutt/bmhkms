@@ -6,6 +6,7 @@ import {
   STAFF_LIST_FILTER_FIELDS,
   STAFF_LIST_FILTER_OPERATORS,
   STAFF_LIST_PAGE_SIZES,
+  STAFF_LIST_SORT_FIELDS,
 } from "@bmhkms/api/schemas/staff";
 import type { StaffListFilter } from "@bmhkms/api/schemas/staff";
 import { z } from "zod";
@@ -81,10 +82,16 @@ function normalizePageSize(
   return STAFF_LIST_DEFAULT_PAGE_SIZE;
 }
 
-function normalizeSortBy(value: unknown): "name" {
-  return value === STAFF_LIST_DEFAULT_SORT_BY
-    ? STAFF_LIST_DEFAULT_SORT_BY
-    : STAFF_LIST_DEFAULT_SORT_BY;
+function normalizeSortBy(
+  value: unknown
+): (typeof STAFF_LIST_SORT_FIELDS)[number] {
+  for (const sortField of STAFF_LIST_SORT_FIELDS) {
+    if (value === sortField) {
+      return sortField;
+    }
+  }
+
+  return STAFF_LIST_DEFAULT_SORT_BY;
 }
 
 function normalizeSortDir(value: unknown): "asc" | "desc" {
@@ -119,7 +126,7 @@ export const staffDirectorySearchSchema = z.object({
       z.literal(100),
     ])
   ),
-  sortBy: z.preprocess(normalizeSortBy, z.literal(STAFF_LIST_DEFAULT_SORT_BY)),
+  sortBy: z.preprocess(normalizeSortBy, z.enum(STAFF_LIST_SORT_FIELDS)),
   sortDir: z.preprocess(normalizeSortDir, z.enum(["asc", "desc"])),
 });
 

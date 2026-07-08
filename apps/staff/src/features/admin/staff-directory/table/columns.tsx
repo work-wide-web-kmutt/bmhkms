@@ -1,6 +1,7 @@
 import type { StaffListItem } from "@bmhkms/api/schemas/staff";
 import type { CellContext, ColumnDef } from "@tanstack/react-table";
 
+import { DataGridColumnHeader } from "@/components/ui/data-grid/column-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import UserAvatar from "@/features/user/avatar";
 
@@ -34,7 +35,9 @@ const staffDirectoryColumns: ColumnDef<StaffDirectoryRow>[] = [
     cell: renderNameCell,
     enableHiding: false,
     enableSorting: true,
-    header: "Name",
+    header: ({ column }) => (
+      <DataGridColumnHeader title="Name" column={column} />
+    ),
     id: "name",
     meta: {
       skeleton: <Skeleton className="h-4 w-16" />,
@@ -46,7 +49,9 @@ const staffDirectoryColumns: ColumnDef<StaffDirectoryRow>[] = [
     cell: renderEmailCell,
     enableHiding: false,
     enableSorting: true,
-    header: "Email",
+    header: ({ column }) => (
+      <DataGridColumnHeader title="Email" column={column} />
+    ),
     meta: {
       skeleton: <Skeleton className="h-4 w-16" />,
     },

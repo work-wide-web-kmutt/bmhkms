@@ -19,7 +19,7 @@ export const STAFF_LIST_FILTER_OPERATORS = [
   "empty",
   "not_empty",
 ] as const;
-export const STAFF_LIST_SORT_FIELDS = ["name"] as const;
+export const STAFF_LIST_SORT_FIELDS = ["name", "email"] as const;
 export const STAFF_ROLE_NAMES = [
   "root",
   "admin",

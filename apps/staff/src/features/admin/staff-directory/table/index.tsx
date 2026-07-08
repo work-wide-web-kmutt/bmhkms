@@ -213,7 +213,7 @@ function StaffDirectoryTable() {
     (updater) => {
       const nextSorting = functionalUpdate(updater, sorting);
       const [nextSort] = nextSorting;
-      const nextSortBy = nextSort?.id === "name" ? "name" : "name";
+      const nextSortBy = nextSort?.id === "email" ? "email" : "name";
       const nextSortDir = nextSort?.desc ? "desc" : "asc";
 
       if (nextSortBy === search.sortBy && nextSortDir === search.sortDir) {

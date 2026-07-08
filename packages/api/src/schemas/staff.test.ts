@@ -20,11 +20,17 @@ describe("staff list input schema", () => {
         pageSize: 100,
       }).pageSize
     ).toBe(100);
+
+    expect(
+      staffListInputSchema.parse({
+        sortBy: "email",
+      }).sortBy
+    ).toBe("email");
   });
 
   it("rejects invalid pages, sort fields, and operators", () => {
     expect(() => staffListInputSchema.parse({ page: 0 })).toThrow();
-    expect(() => staffListInputSchema.parse({ sortBy: "email" })).toThrow();
+    expect(() => staffListInputSchema.parse({ sortBy: "role" })).toThrow();
     expect(() =>
       staffListInputSchema.parse({
         filters: [

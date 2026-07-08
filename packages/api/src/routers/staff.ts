@@ -51,7 +51,8 @@ const staffListProcedure = protectedProcedure
       input.pageSize,
       total
     );
-    const normalizedName = sql<string>`lower(btrim(coalesce(${user.name}, '')))`;
+    const sortColumn = input.sortBy === "email" ? user.email : user.name;
+    const normalizedSortValue = sql<string>`lower(btrim(coalesce(${sortColumn}, '')))`;
 
     const items = await db
       .select({
@@ -63,7 +64,9 @@ const staffListProcedure = protectedProcedure
       .from(user)
       .where(whereClause)
       .orderBy(
-        input.sortDir === "asc" ? asc(normalizedName) : desc(normalizedName),
+        input.sortDir === "asc"
+          ? asc(normalizedSortValue)
+          : desc(normalizedSortValue),
         asc(user.id)
       )
       .limit(input.pageSize)
