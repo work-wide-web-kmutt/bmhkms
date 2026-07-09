@@ -12,4 +12,7 @@ export default defineConfig({
     "*.{css,md,json,jsonc}": "vp check --fix",
     "*.{js,jsx,tsx,vue,svelte}": "ultracite fix",
   },
+  test: {
+    projects: ["apps/*", "packages/*"],
+  },
 });
