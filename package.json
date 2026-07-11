@@ -38,8 +38,6 @@
     "test": "vp test",
     "test:watch": "vp test watch",
     "test:coverage": "vp test run --coverage",
-    "test:server": "vp run --filter server test",
-    "test:server:coverage": "vp run --filter server test:coverage",
     "check": "ultracite check",
     "fix": "ultracite fix",
     "staged": "vp staged",
