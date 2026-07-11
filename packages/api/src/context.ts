@@ -1,16 +1,15 @@
 import { auth } from "@bmhkms/auth";
-import type { Context as ElysiaContext } from "elysia";
 
 export interface CreateContextOptions {
-  context: ElysiaContext;
+  headers: Headers;
 }
 
-export async function createContext({ context }: CreateContextOptions) {
+export async function createContext({ headers }: CreateContextOptions) {
   const session = await auth.api.getSession({
-    headers: context.request.headers,
+    headers,
   });
+
   return {
-    auth: null,
     session,
   };
 }

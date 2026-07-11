@@ -1,33 +1,35 @@
 {
   "name": "server",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "src/main.ts",
   "scripts": {
     "build": "vp pack",
     "check-types": "tsc -b",
-    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
-    "dev": "bun run --hot src/index.ts",
-    "start": "bun run dist/index.mjs"
+    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/main.ts --outfile server",
+    "dev": "bun run --hot src/main.ts",
+    "start": "bun run dist/main.mjs",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@bmhkms/api": "workspace:*",
     "@bmhkms/auth": "workspace:*",
-    "@bmhkms/db": "workspace:*",
     "@bmhkms/env": "workspace:*",
     "@elysiajs/cors": "^1.4.1",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
-    "@sinclair/typebox": "^0.34.49",
-    "better-auth": "catalog:",
-    "dotenv": "catalog:",
     "elysia": "catalog:",
-    "evlog": "^2.18.1",
-    "zod": "catalog:"
+    "evlog": "^2.18.1"
   },
   "devDependencies": {
     "@bmhkms/config": "workspace:*",
+    "@orpc/client": "catalog:",
     "@types/bun": "catalog:",
-    "typescript": "catalog:"
+    "@vitest/coverage-v8": "4.1.9",
+    "dotenv": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "^4.1.9"
   }
 }

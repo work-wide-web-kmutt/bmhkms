@@ -1,4 +1,4 @@
-import type { AppRouterClient } from "@bmhkms/api/routers/index";
+import type { AppRouterClient } from "@bmhkms/api/router";
 import { env } from "@bmhkms/env/web";
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
