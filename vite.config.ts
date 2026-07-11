@@ -13,6 +13,7 @@ export default defineConfig({
     "*.{js,jsx,tsx,vue,svelte}": "ultracite fix",
   },
   test: {
+    exclude: ["**/dist/**"],
     projects: ["apps/*", "packages/*"],
   },
 });

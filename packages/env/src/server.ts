@@ -15,6 +15,7 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
+    PORT: z.coerce.number().int().positive().default(3000),
     STAFF_URL: z.url(),
     WEB_URL: z.url(),
   },
